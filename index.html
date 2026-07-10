@@ -3,166 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Regina Hirtentreu — Maalikunst</title>
+  <title>Regina Pruul — maalikunst</title>
+  <meta name="description" content="Regina Pruuli originaalmaalide galerii. Vaikus, valgus ja põhjamaine maastik lõuendil." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <div class="container header-inner">
-      <a href="#" class="logo">Regina Hirtentreu</a>
+    <div class="header-inner">
+      <a href="#/" class="logo" data-nav data-page="avaleht">Regina Pruul</a>
       <nav class="nav">
         <button class="nav-toggle" aria-label="Ava menüü" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
         <ul class="nav-links">
-          <li><a href="#galerii">Galerii</a></li>
-          <li><a href="#minust">Minust</a></li>
-          <li><a href="#kontakt">Kontakt</a></li>
+          <li><a href="#/galerii" data-nav data-page="galerii">Galerii</a></li>
+          <li><a href="#/naitused" data-nav data-page="naitused">Näitused</a></li>
+          <li><a href="#/kunstnikust" data-nav data-page="kunstnikust">Kunstnikust</a></li>
+          <li><a href="#/kontakt" data-nav data-page="kontakt">Kontakt</a></li>
         </ul>
       </nav>
+      <div class="header-actions" id="header-actions"></div>
     </div>
   </header>
 
-  <main>
-    <section class="hero container">
-      <p class="hero-eyebrow">Maalikunstnik</p>
-      <h1>Regina Hirtentreu</h1>
-      <p class="hero-tagline">
-        Maalin emotsioone ja hetki, mis väärivad püsimist. Siin leiad valiku
-        minu töödest — igaüks neist on saadaval kas kodu või kollektsiooni
-        rikastamiseks.
-      </p>
-      <a href="#galerii" class="btn">Vaata teoseid</a>
-    </section>
-
-    <section id="galerii" class="section container">
-      <h2>Galerii</h2>
-      <p class="section-intro">
-        Iga teos on unikaalne originaal. Hinnale lisandub pakendamine ja
-        saatmine. Kui mõni töö kõnetab sind, võta lihtsalt ühendust.
-      </p>
-
-      <div class="artwork-grid">
-        <article class="artwork-card">
-          <div class="artwork-image artwork-1">
-            <span class="artwork-placeholder-tag">Näidispilt</span>
-          </div>
-          <div class="artwork-info">
-            <div class="artwork-heading">
-              <h3>Hommikune vaikus</h3>
-              <span class="status status-available">Saadaval</span>
-            </div>
-            <p class="artwork-meta">Õli lõuendil · 60 × 80 cm</p>
-            <p class="artwork-price">450 €</p>
-            <a href="mailto:regina.hirtentreu@gmail.com?subject=Huvi%20teose%20vastu%3A%20Hommikune%20vaikus" class="artwork-link">Küsi lisainfot &rarr;</a>
-          </div>
-        </article>
-
-        <article class="artwork-card">
-          <div class="artwork-image artwork-2">
-            <span class="artwork-placeholder-tag">Näidispilt</span>
-          </div>
-          <div class="artwork-info">
-            <div class="artwork-heading">
-              <h3>Sügisvärvid</h3>
-              <span class="status status-available">Saadaval</span>
-            </div>
-            <p class="artwork-meta">Akrüül lõuendil · 50 × 70 cm</p>
-            <p class="artwork-price">380 €</p>
-            <a href="mailto:regina.hirtentreu@gmail.com?subject=Huvi%20teose%20vastu%3A%20S%C3%BCgisv%C3%A4rvid" class="artwork-link">Küsi lisainfot &rarr;</a>
-          </div>
-        </article>
-
-        <article class="artwork-card">
-          <div class="artwork-image artwork-3">
-            <span class="artwork-placeholder-tag">Näidispilt</span>
-          </div>
-          <div class="artwork-info">
-            <div class="artwork-heading">
-              <h3>Meri ja tuul</h3>
-              <span class="status status-sold">Müüdud</span>
-            </div>
-            <p class="artwork-meta">Õli lõuendil · 70 × 100 cm</p>
-            <p class="artwork-price">650 €</p>
-            <a href="mailto:regina.hirtentreu@gmail.com?subject=K%C3%BCsimus%20teose%20kohta%3A%20Meri%20ja%20tuul" class="artwork-link">Küsi sarnase kohta &rarr;</a>
-          </div>
-        </article>
-
-        <article class="artwork-card">
-          <div class="artwork-image artwork-4">
-            <span class="artwork-placeholder-tag">Näidispilt</span>
-          </div>
-          <div class="artwork-info">
-            <div class="artwork-heading">
-              <h3>Linnavalgus</h3>
-              <span class="status status-available">Saadaval</span>
-            </div>
-            <p class="artwork-meta">Akrüül papil · 40 × 50 cm</p>
-            <p class="artwork-price">220 €</p>
-            <a href="mailto:regina.hirtentreu@gmail.com?subject=Huvi%20teose%20vastu%3A%20Linnavalgus" class="artwork-link">Küsi lisainfot &rarr;</a>
-          </div>
-        </article>
-
-        <article class="artwork-card">
-          <div class="artwork-image artwork-5">
-            <span class="artwork-placeholder-tag">Näidispilt</span>
-          </div>
-          <div class="artwork-info">
-            <div class="artwork-heading">
-              <h3>Vaikne aed</h3>
-              <span class="status status-available">Saadaval</span>
-            </div>
-            <p class="artwork-meta">Õli lõuendil · 60 × 60 cm</p>
-            <p class="artwork-price">400 €</p>
-            <a href="mailto:regina.hirtentreu@gmail.com?subject=Huvi%20teose%20vastu%3A%20Vaikne%20aed" class="artwork-link">Küsi lisainfot &rarr;</a>
-          </div>
-        </article>
-
-        <article class="artwork-card">
-          <div class="artwork-image artwork-6">
-            <span class="artwork-placeholder-tag">Näidispilt</span>
-          </div>
-          <div class="artwork-info">
-            <div class="artwork-heading">
-              <h3>Talveöö</h3>
-              <span class="status status-sold">Müüdud</span>
-            </div>
-            <p class="artwork-meta">Akrüül lõuendil · 50 × 60 cm</p>
-            <p class="artwork-price">320 €</p>
-            <a href="mailto:regina.hirtentreu@gmail.com?subject=K%C3%BCsimus%20teose%20kohta%3A%20Talve%C3%B6%C3%B6" class="artwork-link">Küsi sarnase kohta &rarr;</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="minust" class="section container">
-      <h2>Minust</h2>
-      <p>
-        Kirjuta siia lühike lugu endast — kuidas maalimisega alustasid, mis
-        stiilis või tehnikatega töötad, ja mis sind inspireerib. See osa aitab
-        ostjatel sinu loominguga isiklikumal tasandil suhestuda.
-      </p>
-    </section>
-
-    <section id="kontakt" class="section container">
-      <h2>Kontakt</h2>
-      <p>
-        Küsimuste, tellimuste või ateljeekülastuse soovi korral võta julgesti
-        ühendust.
-      </p>
-      <a href="mailto:regina.hirtentreu@gmail.com" class="btn">regina.hirtentreu@gmail.com</a>
-    </section>
-  </main>
+  <main id="page"></main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>&copy; <span id="year"></span> Regina Hirtentreu</p>
-    </div>
+    <span>© <span id="year"></span> Regina Pruul</span>
+    <span>Instagram · regina.hirtentreu@gmail.com</span>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
