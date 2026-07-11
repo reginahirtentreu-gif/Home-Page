@@ -1,6 +1,6 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const STORAGE_KEY = 'rp_paintings_v1';
+const STORAGE_KEY = 'rp_paintings_v2';
 const AUTH_KEY = 'rp_admin_logged_v1';
 const EMAIL_KEY = 'rp_admin_email_v1';
 const PW_KEY = 'rp_admin_pw_v1';
@@ -42,16 +42,40 @@ function fmt(n) {
 }
 
 function seedPaintings() {
-  return [1, 2, 3, 4, 5, 6].map((i) => ({
-    id: i,
-    title: 'Nimetu maal ' + String(i).padStart(2, '0'),
-    tech: 'Andmed lisandumas',
-    size: 'Andmed lisandumas',
-    year: null,
-    price: null,
-    sold: false,
-    desc: 'Kirjeldus lisandub peagi.',
-    img: null,
+  const withPhoto = [
+    { title: 'Rannarõõmud', tech: 'Tehnika täpsustamisel', size: '70 × 90 cm', year: 2025, price: 3000, sold: false, img: 'uploads/0FC23549-0673-40EE-A4E6-6CE5946FEC02.jpeg' },
+    { title: 'Linnamöll', tech: 'Akrüül lõuendil', size: '40 × 60 cm', year: 2025, price: 2500, sold: false, img: 'uploads/53cc8d0d-32cd-4067-9598-f4dd9df23dfb.jpeg' },
+    { title: 'Leht', tech: 'Akrüül paberil', size: '65 × 79 cm', year: 2014, price: 300, sold: false, img: 'uploads/DSC01733.jpeg' },
+    { title: 'Corgi terrassil (Ruutu)', tech: 'Õli lõuendil', size: '60 × 80 cm', year: 2020, price: null, sold: true, img: 'uploads/IMG_0324.jpeg' },
+    { title: 'Vannipart', tech: 'Kuivpastell', size: '62 × 76 cm', year: 2018, price: null, sold: true, img: 'uploads/IMG_0340.jpeg' },
+    { title: 'Landscape', tech: 'Akrüül lõuendil', size: '70 × 90 cm', year: 2023, price: 2500, sold: false, img: 'uploads/IMG_0789.jpeg' },
+    { title: 'Varjud metsas', tech: 'Akrüül lõuendil, raamitud', size: '62 × 100 cm', year: 2020, price: 750, sold: false, img: 'uploads/IMG_0794.jpeg' },
+    { title: 'Voolamine', tech: 'Akrüül lõuendil', size: '60 × 150 cm', year: 2023, price: 1200, sold: false, img: 'uploads/IMG_0802.jpeg' },
+    { title: 'Klaaskuul', tech: 'Akrüül papil', size: '59 × 84 cm', year: 2021, price: 75, sold: false, img: 'uploads/IMG_2343.jpeg' },
+    { title: 'Nõmm koos metsatukaga', tech: 'Akrüül lõuendil', size: '70 × 70 cm', year: 2025, price: 2500, sold: false, img: 'uploads/IMG_3052.jpeg' },
+    { title: 'Puupea', tech: 'Akrüül lõuendil', size: '60 × 80 cm', year: 2024, price: 750, sold: false, img: 'uploads/b64f69a5-68ec-4fbc-91a7-ae45546ccbcf.jpeg' },
+  ];
+  const photoPending = [
+    { title: 'Avatar', tech: 'Akrüül paberil', size: '65 × 76 cm', year: 2016, price: null, sold: true },
+    { title: 'Mets', tech: 'Õli lõuendil', size: '70 × 100 cm', year: 2016, price: null, sold: true },
+    { title: 'Mõtte peegeldus', tech: 'Akrüül paberil', size: '77 × 61 cm', year: 2016, price: 350, sold: false },
+    { title: 'Bob', tech: 'Õli lõuendil', size: '50 × 60 cm', year: 2013, price: null, sold: true },
+    { title: 'Hundu', tech: 'Kuivpastell', size: '59 × 84 cm', year: 2016, price: null, sold: true },
+    { title: 'Silmside', tech: 'Pastakas paberil', size: '65 × 76 cm', year: 2016, price: 75, sold: false },
+    { title: 'Masenduse hetk', tech: 'Õli', size: '77 × 61 cm', year: 2016, price: null, sold: true },
+    { title: 'Miski südames', tech: 'Õli', size: '50 × 60 cm', year: 2017, price: 350, sold: false },
+    { title: 'Seenemikk', tech: 'Õli', size: '70 × 100 cm', year: 2017, price: null, sold: true },
+  ];
+  return [...withPhoto, ...photoPending].map((p, i) => ({
+    id: i + 1,
+    title: p.title,
+    tech: p.tech,
+    size: p.size,
+    year: p.year,
+    price: p.price,
+    sold: p.sold,
+    desc: '',
+    img: p.img || null,
   }));
 }
 
@@ -242,7 +266,7 @@ function screenMaal(id) {
           <p class="status-label">${esc(p.status)}</p>
           <h1>${esc(p.title)}</h1>
           <p class="meta">${esc(p.meta)}</p>
-          <p class="desc">${esc(p.desc)}</p>
+          ${p.desc ? `<p class="desc">${esc(p.desc)}</p>` : ''}
           <p class="price">${esc(p.priceStr)}</p>
           ${p.avail ? `
             <div class="interest-block">
