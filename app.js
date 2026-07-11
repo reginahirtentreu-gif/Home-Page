@@ -1,6 +1,6 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const STORAGE_KEY = 'rp_paintings_v2';
+const STORAGE_KEY = 'rp_paintings_v3';
 const AUTH_KEY = 'rp_admin_logged_v1';
 const EMAIL_KEY = 'rp_admin_email_v1';
 const PW_KEY = 'rp_admin_pw_v1';
@@ -54,15 +54,15 @@ function seedPaintings() {
     { title: 'Klaaskuul', tech: 'Akrüül papil', size: '59 × 84 cm', year: 2021, price: 75, sold: false, img: 'uploads/IMG_2343.jpeg' },
     { title: 'Nõmm koos metsatukaga', tech: 'Akrüül lõuendil', size: '70 × 70 cm', year: 2025, price: 2500, sold: false, img: 'uploads/IMG_3052.jpeg' },
     { title: 'Puupea', tech: 'Akrüül lõuendil', size: '60 × 80 cm', year: 2024, price: 750, sold: false, img: 'uploads/b64f69a5-68ec-4fbc-91a7-ae45546ccbcf.jpeg' },
+    { title: 'Avatar', tech: 'Akrüül paberil', size: '65 × 76 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_4971_1.jpeg' },
+    { title: 'Mets', tech: 'Õli lõuendil', size: '70 × 100 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5046.jpeg' },
+    { title: 'Bob', tech: 'Õli lõuendil', size: '50 × 60 cm', year: 2013, price: null, sold: true, img: 'uploads/IMG_5169.jpeg' },
+    { title: 'Mõtte peegeldus', tech: 'Akrüül paberil', size: '77 × 61 cm', year: 2016, price: 350, sold: false, img: 'uploads/IMG_5231_Original.jpeg' },
+    { title: 'Hundu', tech: 'Kuivpastell', size: '59 × 84 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5256.jpeg' },
+    { title: 'Masenduse hetk', tech: 'Õli', size: '77 × 61 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5329.jpeg' },
   ];
   const photoPending = [
-    { title: 'Avatar', tech: 'Akrüül paberil', size: '65 × 76 cm', year: 2016, price: null, sold: true },
-    { title: 'Mets', tech: 'Õli lõuendil', size: '70 × 100 cm', year: 2016, price: null, sold: true },
-    { title: 'Mõtte peegeldus', tech: 'Akrüül paberil', size: '77 × 61 cm', year: 2016, price: 350, sold: false },
-    { title: 'Bob', tech: 'Õli lõuendil', size: '50 × 60 cm', year: 2013, price: null, sold: true },
-    { title: 'Hundu', tech: 'Kuivpastell', size: '59 × 84 cm', year: 2016, price: null, sold: true },
     { title: 'Silmside', tech: 'Pastakas paberil', size: '65 × 76 cm', year: 2016, price: 75, sold: false },
-    { title: 'Masenduse hetk', tech: 'Õli', size: '77 × 61 cm', year: 2016, price: null, sold: true },
     { title: 'Miski südames', tech: 'Õli', size: '50 × 60 cm', year: 2017, price: 350, sold: false },
     { title: 'Seenemikk', tech: 'Õli', size: '70 × 100 cm', year: 2017, price: null, sold: true },
   ];
