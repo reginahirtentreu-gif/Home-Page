@@ -43,7 +43,7 @@ function fmt(n) {
 
 function seedPaintings() {
   const withPhoto = [
-    { title: 'Rannarõõmud', tech: 'Tehnika täpsustamisel', size: '70 × 90 cm', year: 2025, price: 3000, sold: false, img: 'uploads/0FC23549-0673-40EE-A4E6-6CE5946FEC02.jpeg' },
+    { title: 'Rannarõõmud', tech: 'Õli lõuendil', size: '70 × 90 cm', year: 2025, price: 3000, sold: false, img: 'uploads/0FC23549-0673-40EE-A4E6-6CE5946FEC02.jpeg' },
     { title: 'Linnamöll', tech: 'Akrüül lõuendil', size: '40 × 60 cm', year: 2025, price: 2500, sold: false, img: 'uploads/53cc8d0d-32cd-4067-9598-f4dd9df23dfb.jpeg' },
     { title: 'Leht', tech: 'Akrüül paberil', size: '65 × 79 cm', year: 2014, price: 300, sold: false, img: 'uploads/DSC01733.jpeg' },
     { title: 'Corgi terrassil (Ruutu)', tech: 'Õli lõuendil', size: '60 × 80 cm', year: 2020, price: null, sold: true, img: 'uploads/IMG_0324.jpeg' },
