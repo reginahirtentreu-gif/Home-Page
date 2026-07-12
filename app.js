@@ -7,7 +7,7 @@ const PW_KEY = 'rp_admin_pw_v1';
 const SHOW_SOLD_KEY = 'rp_show_sold_v1';
 
 const DEFAULT_ADMIN_EMAIL = 'regina.hirtentreu@gmail.com';
-const DEFAULT_ADMIN_PASSWORD = 'Hirtekas12';
+const DEFAULT_ADMIN_PASSWORD = 'Pildigalerii';
 const CONTACT_EMAIL = 'regina.hirtentreu@gmail.com';
 const WHATSAPP_NUMBER = '37258090777';
 const WHATSAPP_DISPLAY = '+372 5809 0777';
