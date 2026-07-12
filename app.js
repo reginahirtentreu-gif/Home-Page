@@ -312,8 +312,6 @@ function screenKunstnikust() {
           <div class="cv-block">
             <p class="label">CV / VALIK</p>
             <div class="cv-list">
-              <span>2026 — „Valge väli", isikunäitus, Tallinn</span>
-              <span>2024 — grupinäitus, Tartu Kunstimaja</span>
               <span>Eesti Kunstiakadeemia — maali konserveerimise eriala</span>
             </div>
           </div>
