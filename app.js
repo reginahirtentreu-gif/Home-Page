@@ -1,6 +1,6 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const STORAGE_KEY = 'rp_paintings_v4';
+const STORAGE_KEY = 'rp_paintings_v5';
 const AUTH_KEY = 'rp_admin_logged_v1';
 const EMAIL_KEY = 'rp_admin_email_v1';
 const PW_KEY = 'rp_admin_pw_v1';
@@ -60,15 +60,14 @@ function seedPaintings() {
     { title: 'Mõtte peegeldus', tech: 'Akrüül paberil', size: '77 × 61 cm', year: 2016, price: 350, sold: false, img: 'uploads/IMG_5231_Original.jpeg' },
     { title: 'Hundu', tech: 'Kuivpastell', size: '59 × 84 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5256.jpeg' },
     { title: 'Masenduse hetk', tech: 'Õli', size: '77 × 61 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5329.jpeg' },
-    { title: 'Ambaal ujumas', tech: 'Õli lõuendil', size: '70 × 100 cm', year: 2025, price: 3000, sold: false, img: 'uploads/IMG_3132.jpeg' },
-    { title: 'Kiigel', tech: 'Akrüül lõuendil', size: '70 × 70 cm', year: 2025, price: null, sold: true, img: 'uploads/IMG_4395.jpeg' },
+    { title: 'Ambaal ujumas', tech: 'Õli lõuendil', size: '70 × 100 cm', year: 2025, price: 3000, sold: false, img: 'uploads/IMG_4395.jpeg' },
+    { title: 'Kiigel', tech: 'Akrüül lõuendil', size: '70 × 70 cm', year: 2025, price: null, sold: true, img: 'uploads/IMG_3132.jpeg' },
     { title: 'Figuur', tech: 'Süsi', size: '59 × 84 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5265.jpeg' },
+    { title: 'Silmside', tech: 'Pastakas paberil', size: '65 × 76 cm', year: 2016, price: 75, sold: false, img: 'uploads/IMG_6510.jpeg' },
+    { title: 'Miski südames', tech: 'Õli', size: '50 × 60 cm', year: 2017, price: 350, sold: false, img: 'uploads/IMG_8154_Original.jpeg' },
+    { title: 'Seenemikk', tech: 'Õli', size: '70 × 100 cm', year: 2017, price: null, sold: true, img: 'uploads/IMG_8842_Original.jpeg' },
   ];
-  const photoPending = [
-    { title: 'Silmside', tech: 'Pastakas paberil', size: '65 × 76 cm', year: 2016, price: 75, sold: false },
-    { title: 'Miski südames', tech: 'Õli', size: '50 × 60 cm', year: 2017, price: 350, sold: false },
-    { title: 'Seenemikk', tech: 'Õli', size: '70 × 100 cm', year: 2017, price: null, sold: true },
-  ];
+  const photoPending = [];
   return [...withPhoto, ...photoPending].map((p, i) => ({
     id: i + 1,
     title: p.title,
