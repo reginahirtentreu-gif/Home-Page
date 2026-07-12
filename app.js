@@ -1,6 +1,6 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const STORAGE_KEY = 'rp_paintings_v6';
+const STORAGE_KEY = 'rp_paintings_v7';
 const AUTH_KEY = 'rp_admin_logged_v1';
 const EMAIL_KEY = 'rp_admin_email_v1';
 const PW_KEY = 'rp_admin_pw_v1';
@@ -43,43 +43,43 @@ function fmt(n) {
 
 function seedPaintings() {
   const withPhoto = [
-    { title: 'Rannarõõmud', tech: 'Õli lõuendil', size: '70 × 90 cm', year: 2025, price: 3000, sold: false, img: 'uploads/0FC23549-0673-40EE-A4E6-6CE5946FEC02.jpeg' },
-    { title: 'Linnamöll', tech: 'Akrüül lõuendil', size: '40 × 60 cm', year: 2025, price: 2500, sold: false, img: 'uploads/53cc8d0d-32cd-4067-9598-f4dd9df23dfb.jpeg' },
-    { title: 'Leht', tech: 'Akrüül paberil', size: '65 × 79 cm', year: 2014, price: 300, sold: false, img: 'uploads/DSC01733.jpeg' },
-    { title: 'Corgi terrassil (Ruutu)', tech: 'Õli lõuendil', size: '60 × 80 cm', year: 2020, price: null, sold: true, img: 'uploads/IMG_0324.jpeg' },
-    { title: 'Vannipart', tech: 'Kuivpastell', size: '62 × 76 cm', year: 2018, price: null, sold: true, img: 'uploads/IMG_0340.jpeg' },
-    { title: 'Landscape', tech: 'Akrüül lõuendil', size: '70 × 90 cm', year: 2023, price: 2500, sold: false, img: 'uploads/IMG_0789.jpeg' },
-    { title: 'Varjud metsas', tech: 'Akrüül lõuendil, raamitud', size: '62 × 100 cm', year: 2020, price: 750, sold: false, img: 'uploads/IMG_0794.jpeg' },
-    { title: 'Voolamine', tech: 'Akrüül lõuendil', size: '60 × 150 cm', year: 2023, price: 1200, sold: false, img: 'uploads/IMG_0802.jpeg' },
-    { title: 'Klaaskuul', tech: 'Akrüül papil', size: '59 × 84 cm', year: 2021, price: 75, sold: false, img: 'uploads/IMG_2343.jpeg' },
-    { title: 'Nõmm koos metsatukaga', tech: 'Akrüül lõuendil', size: '70 × 70 cm', year: 2025, price: 2500, sold: false, img: 'uploads/IMG_3052.jpeg' },
-    { title: 'Puupea', tech: 'Akrüül lõuendil', size: '60 × 80 cm', year: 2024, price: 750, sold: false, img: 'uploads/b64f69a5-68ec-4fbc-91a7-ae45546ccbcf.jpeg' },
-    { title: 'Avatar', tech: 'Akrüül paberil', size: '65 × 76 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_4971_1.jpeg' },
-    { title: 'Mets', tech: 'Õli lõuendil', size: '70 × 100 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5046.jpeg' },
-    { title: 'Bob', tech: 'Õli lõuendil', size: '50 × 60 cm', year: 2013, price: null, sold: true, img: 'uploads/IMG_5169.jpeg' },
-    { title: 'Mõtte peegeldus', tech: 'Akrüül paberil', size: '77 × 61 cm', year: 2016, price: 350, sold: false, img: 'uploads/IMG_5231_Original.jpeg' },
-    { title: 'Hundu', tech: 'Kuivpastell', size: '59 × 84 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5256.jpeg' },
-    { title: 'Masenduse hetk', tech: 'Õli', size: '77 × 61 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5329.jpeg' },
-    { title: 'Ambaal ujumas', tech: 'Õli lõuendil', size: '70 × 100 cm', year: 2025, price: 3000, sold: false, img: 'uploads/IMG_4395.jpeg' },
-    { title: 'Kiigel', tech: 'Akrüül lõuendil', size: '70 × 70 cm', year: 2025, price: null, sold: true, img: 'uploads/IMG_3132.jpeg' },
-    { title: 'Figuur', tech: 'Süsi', size: '59 × 84 cm', year: 2016, price: null, sold: true, img: 'uploads/IMG_5265.jpeg' },
-    { title: 'Silmside', tech: 'Pastakas paberil', size: '65 × 76 cm', year: 2016, price: 75, sold: false, img: 'uploads/IMG_6510.jpeg' },
-    { title: 'Miski südames', tech: 'Õli', size: '50 × 60 cm', year: 2017, price: 350, sold: false, img: 'uploads/IMG_8154_Original.jpeg' },
-    { title: 'Seenemikk', tech: 'Õli', size: '70 × 100 cm', year: 2017, price: null, sold: true, img: 'uploads/IMG_8842_Original.jpeg' },
-    { title: 'Rohetants', tech: 'Akrüül lõuendil', size: '50 × 70 cm', year: 2020, price: 500, sold: false, img: 'uploads/IMG_5673.jpeg' },
-    { title: 'Udune niit', tech: 'Õli lõuendil', size: '51 × 60 cm', year: 2020, price: null, sold: true, img: 'uploads/IMG_5819.jpeg' },
-    { title: 'Päikeseloojang merekaldal', tech: 'Õli lõuendil', size: '80 × 100 cm', year: 2026, price: 4000, sold: false, img: 'uploads/IMG_5935.jpeg' },
-    { title: 'Kollakas kolmapäev', tech: 'Akrüül paberil, raamitud', size: '77 × 61 cm', year: 2017, price: 95, sold: false, img: 'uploads/IMG_6714.jpeg' },
-    { title: 'Õitsenud tulbiõis', tech: 'Õli lõuendil', size: '80 × 100 cm', year: 2026, price: 4000, sold: false, img: 'uploads/IMG_6886.jpeg' },
-    { title: 'Veritas', tech: 'Õli lõuendil', size: '59 × 84 cm', year: 2019, price: null, sold: true, img: 'uploads/IMG_7521.jpeg' },
-    { title: 'Merevaade', tech: 'Õli lõuendil', size: '50 × 60 cm', year: 2021, price: null, sold: true, img: 'uploads/IMG_7566.jpeg' },
-    { title: 'Karge mets', tech: 'Õli lõuendil', size: '60 × 70 cm', year: 2021, price: null, sold: true, img: 'uploads/IMG_7962.jpeg' },
-    { title: 'Karukellad', tech: 'Õli lõuendil', size: '55 × 80 cm', year: 2021, price: 350, sold: false, img: 'uploads/IMG_8722.jpeg' },
-    { title: 'Elu kastis', tech: 'Akrüül', size: '50 × 50 cm', year: 2021, price: 250, sold: false, img: 'uploads/IMG_8743.jpeg' },
-    { title: 'Kontsentriline', tech: 'Akrüül', size: '50 × 50 cm', year: 2021, price: 250, sold: false, img: 'uploads/IMG_8746.jpeg' },
-    { title: 'Virsik', tech: 'Akrüül paberil, raamitud', size: '85 × 67 cm', year: 2017, price: null, sold: true, img: 'uploads/IMG_9252_Original.jpeg' },
-    { title: 'Segaduses kala', tech: 'Akrüül paberil', size: '83 × 64 cm', year: 2017, price: null, sold: true, img: 'uploads/IMG_9254_Original.jpeg' },
-    { title: 'Mures tuleviku pärast', tech: 'Õli lõuendil', size: '60 × 80 cm', year: 2021, price: 750, sold: false, img: 'uploads/IMG_9954.jpeg' },
+    { title: "Päikeseloojang merekaldal", tech: "Õli lõuendil", size: "80 × 100 cm", year: 2026, price: 4000, sold: false, img: "uploads/IMG_5935.jpeg" },
+    { title: "Õitsenud tulbiõis", tech: "Õli lõuendil", size: "80 × 100 cm", year: 2026, price: 4000, sold: false, img: "uploads/IMG_6886.jpeg" },
+    { title: "Rannarõõmud", tech: "Õli lõuendil", size: "70 × 90 cm", year: 2025, price: 3000, sold: false, img: "uploads/0FC23549-0673-40EE-A4E6-6CE5946FEC02.jpeg" },
+    { title: "Linnamöll", tech: "Akrüül lõuendil", size: "40 × 60 cm", year: 2025, price: 2500, sold: false, img: "uploads/53cc8d0d-32cd-4067-9598-f4dd9df23dfb.jpeg" },
+    { title: "Nõmm koos metsatukaga", tech: "Akrüül lõuendil", size: "70 × 70 cm", year: 2025, price: 2500, sold: false, img: "uploads/IMG_3052.jpeg" },
+    { title: "Ambaal ujumas", tech: "Õli lõuendil", size: "70 × 100 cm", year: 2025, price: 3000, sold: false, img: "uploads/IMG_4395.jpeg" },
+    { title: "Kiigel", tech: "Akrüül lõuendil", size: "70 × 70 cm", year: 2025, price: null, sold: true, img: "uploads/IMG_3132.jpeg" },
+    { title: "Puupea", tech: "Akrüül lõuendil", size: "60 × 80 cm", year: 2024, price: 750, sold: false, img: "uploads/b64f69a5-68ec-4fbc-91a7-ae45546ccbcf.jpeg" },
+    { title: "Landscape", tech: "Akrüül lõuendil", size: "70 × 90 cm", year: 2023, price: 2500, sold: false, img: "uploads/IMG_0789.jpeg" },
+    { title: "Voolamine", tech: "Akrüül lõuendil", size: "60 × 150 cm", year: 2023, price: 1200, sold: false, img: "uploads/IMG_0802.jpeg" },
+    { title: "Klaaskuul", tech: "Akrüül papil", size: "59 × 84 cm", year: 2021, price: 75, sold: false, img: "uploads/IMG_2343.jpeg" },
+    { title: "Merevaade", tech: "Õli lõuendil", size: "50 × 60 cm", year: 2021, price: null, sold: true, img: "uploads/IMG_7566.jpeg" },
+    { title: "Karge mets", tech: "Õli lõuendil", size: "60 × 70 cm", year: 2021, price: null, sold: true, img: "uploads/IMG_7962.jpeg" },
+    { title: "Karukellad", tech: "Õli lõuendil", size: "55 × 80 cm", year: 2021, price: 350, sold: false, img: "uploads/IMG_8722.jpeg" },
+    { title: "Elu kastis", tech: "Akrüül", size: "50 × 50 cm", year: 2021, price: 250, sold: false, img: "uploads/IMG_8743.jpeg" },
+    { title: "Kontsentriline", tech: "Akrüül", size: "50 × 50 cm", year: 2021, price: 250, sold: false, img: "uploads/IMG_8746.jpeg" },
+    { title: "Mures tuleviku pärast", tech: "Õli lõuendil", size: "60 × 80 cm", year: 2021, price: 750, sold: false, img: "uploads/IMG_9954.jpeg" },
+    { title: "Corgi terrassil (Ruutu)", tech: "Õli lõuendil", size: "60 × 80 cm", year: 2020, price: null, sold: true, img: "uploads/IMG_0324.jpeg" },
+    { title: "Varjud metsas", tech: "Akrüül lõuendil, raamitud", size: "62 × 100 cm", year: 2020, price: 750, sold: false, img: "uploads/IMG_0794.jpeg" },
+    { title: "Rohetants", tech: "Akrüül lõuendil", size: "50 × 70 cm", year: 2020, price: 500, sold: false, img: "uploads/IMG_5673.jpeg" },
+    { title: "Udune niit", tech: "Õli lõuendil", size: "51 × 60 cm", year: 2020, price: null, sold: true, img: "uploads/IMG_5819.jpeg" },
+    { title: "Veritas", tech: "Õli lõuendil", size: "59 × 84 cm", year: 2019, price: null, sold: true, img: "uploads/IMG_7521.jpeg" },
+    { title: "Vannipart", tech: "Kuivpastell", size: "62 × 76 cm", year: 2018, price: null, sold: true, img: "uploads/IMG_0340.jpeg" },
+    { title: "Miski südames", tech: "Õli", size: "50 × 60 cm", year: 2017, price: 350, sold: false, img: "uploads/IMG_8154_Original.jpeg" },
+    { title: "Seenemikk", tech: "Õli", size: "70 × 100 cm", year: 2017, price: null, sold: true, img: "uploads/IMG_8842_Original.jpeg" },
+    { title: "Kollakas kolmapäev", tech: "Akrüül paberil, raamitud", size: "77 × 61 cm", year: 2017, price: 95, sold: false, img: "uploads/IMG_6714.jpeg" },
+    { title: "Virsik", tech: "Akrüül paberil, raamitud", size: "85 × 67 cm", year: 2017, price: null, sold: true, img: "uploads/IMG_9252_Original.jpeg" },
+    { title: "Segaduses kala", tech: "Akrüül paberil", size: "83 × 64 cm", year: 2017, price: null, sold: true, img: "uploads/IMG_9254_Original.jpeg" },
+    { title: "Avatar", tech: "Akrüül paberil", size: "65 × 76 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_4971_1.jpeg" },
+    { title: "Mets", tech: "Õli lõuendil", size: "70 × 100 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5046.jpeg" },
+    { title: "Mõtte peegeldus", tech: "Akrüül paberil", size: "77 × 61 cm", year: 2016, price: 350, sold: false, img: "uploads/IMG_5231_Original.jpeg" },
+    { title: "Hundu", tech: "Kuivpastell", size: "59 × 84 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5256.jpeg" },
+    { title: "Masenduse hetk", tech: "Õli", size: "77 × 61 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5329.jpeg" },
+    { title: "Figuur", tech: "Süsi", size: "59 × 84 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5265.jpeg" },
+    { title: "Silmside", tech: "Pastakas paberil", size: "65 × 76 cm", year: 2016, price: 75, sold: false, img: "uploads/IMG_6510.jpeg" },
+    { title: "Leht", tech: "Akrüül paberil", size: "65 × 79 cm", year: 2014, price: 300, sold: false, img: "uploads/DSC01733.jpeg" },
+    { title: "Bob", tech: "Õli lõuendil", size: "50 × 60 cm", year: 2013, price: null, sold: true, img: "uploads/IMG_5169.jpeg" },
   ];
   const photoPending = [];
   return [...withPhoto, ...photoPending].map((p, i) => ({
@@ -138,7 +138,7 @@ function decorate(p) {
 
 function imgBox(p, extraClass) {
   if (p.img) {
-    return `<div class="imgbox ${extraClass || ''}"><img src="${esc(p.img)}" alt="${esc(p.title)}"></div>`;
+    return `<div class="imgbox ${extraClass || ''}"><img src="${esc(p.img)}" alt="${esc(p.title)}" loading="lazy"></div>`;
   }
   return `<div class="imgbox ${extraClass || ''}"><span>foto lisandumas</span></div>`;
 }
@@ -174,24 +174,16 @@ function rerender() {
 /* ===== Header ===== */
 
 function renderHeader() {
-  const { page } = currentRoute();
-  document.querySelectorAll('.nav-links a[data-nav]').forEach((a) => {
-    a.classList.toggle('active', a.dataset.nav === page);
-  });
-  const actions = document.getElementById('header-actions');
-  const langHtml = `<span class="lang-toggle"><span class="lang-on">ET</span> / EN</span>`;
+  const actions = document.getElementById('footer-actions');
+  if (!actions) return;
   if (state.loggedIn) {
     actions.innerHTML = `
-      ${langHtml}
       <span data-nav="haldus">Halda galeriid</span>
-      <span data-nav="seaded">Seaded</span>
-      <span data-action="logout">Logi välja</span>
+      · <span data-nav="seaded">Seaded</span>
+      · <span data-action="logout">Logi välja</span>
     `;
   } else {
-    actions.innerHTML = `
-      ${langHtml}
-      <span data-nav="login">Logi sisse</span>
-    `;
+    actions.innerHTML = `<span data-nav="login">Logi sisse</span>`;
   }
 }
 
@@ -732,12 +724,6 @@ document.addEventListener('click', (e) => {
   if (actionEl) {
     handleAction(actionEl);
   }
-});
-
-document.querySelector('.nav-toggle').addEventListener('click', function () {
-  const links = document.querySelector('.nav-links');
-  const open = links.classList.toggle('open');
-  this.setAttribute('aria-expanded', String(open));
 });
 
 document.addEventListener('input', (e) => {

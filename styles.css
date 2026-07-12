@@ -334,6 +334,8 @@ button { font-family: var(--font-sans); }
   display: flex; justify-content: space-between; padding: 30px 56px;
   font-size: 12px; color: var(--text-tertiary); border-top: 1px solid var(--border);
 }
+.site-footer a, .site-footer [data-nav], .site-footer [data-action] { cursor: pointer; color: var(--text-tertiary); }
+.site-footer a:hover, .site-footer [data-nav]:hover, .site-footer [data-action]:hover { color: var(--text); }
 
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
