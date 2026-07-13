@@ -5,6 +5,7 @@ const AUTH_KEY = 'rp_admin_logged_v1';
 const EMAIL_KEY = 'rp_admin_email_v1';
 const PW_KEY = 'rp_admin_pw_v1';
 const SHOW_SOLD_KEY = 'rp_show_sold_v1';
+const LANG_KEY = 'rp_lang_v1';
 
 const DEFAULT_ADMIN_EMAIL = 'regina.hirtentreu@gmail.com';
 const DEFAULT_ADMIN_PASSWORD = 'Pildigalerii';
@@ -19,7 +20,169 @@ const state = {
   adminEmail: DEFAULT_ADMIN_EMAIL,
   adminPassword: DEFAULT_ADMIN_PASSWORD,
   showSold: true,
+  lang: 'et',
 };
+
+const I18N = {
+  et: {
+    footer_kontakt: 'Kontakt',
+    footer_login: 'Logi sisse',
+    footer_manage: 'Halda galeriid',
+    footer_settings: 'Seaded',
+    footer_logout: 'Logi välja',
+    home_eyebrow: 'Originaalmaalid · õli ja akrüül',
+    home_hero_title: 'Vaikus, valgus ja põhjamaine maastik lõuendil',
+    home_btn_gallery: 'Vaata galeriid',
+    home_btn_about: 'Kunstnikust',
+    home_all_works: 'KÕIK TÖÖD →',
+    home_about_eyebrow: 'Kunstnikust',
+    home_quote: '„Maalin valgust, mis jääb hetkeks pidama — mere kohal, toa nurgas, mälestuses."',
+    home_read_more: 'LOE EDASI →',
+    portrait_placeholder: 'kunstniku portree',
+    gallery_eyebrow: 'Galerii',
+    gallery_title: 'Kõik tööd',
+    gallery_empty: 'Töid ei ole hetkel lisatud.',
+    photo_pending: 'foto lisandumas',
+    pill_email: 'E-post',
+    sold_badge: 'MÜÜDUD',
+    back_to_gallery: '← TAGASI GALERIISSE',
+    painting_not_found: 'Maali ei leitud.',
+    status_available: 'Saadaval',
+    status_sold: 'Müüdud',
+    interested_label: 'Huvitatud sellest tööst?',
+    email_btn: 'Kirjuta e-mailile',
+    whatsapp_btn: 'Kirjuta WhatsAppis',
+    assurance_shipping: 'Tasuta transport Eestis · 5–7 tööpäeva',
+    assurance_cert: 'Autori sertifikaat kaasas',
+    assurance_return: '14-päevane tagastusõigus',
+    price_on_request: 'Hind küsimisel',
+    about_eyebrow: 'Kunstnikust',
+    about_portrait_placeholder: 'kunstniku portree — foto',
+    about_bio1: 'Olen lõpetanud Eesti Kunstiakadeemia maali konserveerimise eriala. Mind huvitavad erinevad maalitehnikad ja stiilid ning nende kasutamine oma loomingus.',
+    about_bio2: 'Kujutan sageli loodust ja inimest, nihestades vaatenurka või liikudes abstraktsema kujutamisviisi suunas. Minu töid mõjutab ka huvi disaini vastu, mis toetab tundlikku kompositsiooni- ja värvikäsitlust.',
+    about_cv_label: 'CV / VALIK',
+    about_cv_education: 'Eesti Kunstiakadeemia — maali konserveerimise eriala',
+    contact_eyebrow: 'Kontakt',
+    contact_title: 'Kirjuta mulle',
+    contact_intro: 'Küsimused maalide, tellimustööde või näituste kohta on alati teretulnud.',
+    contact_studio: 'Ateljee: Tallinn (külastus kokkuleppel)',
+    label_name: 'NIMI',
+    label_email: 'E-POST',
+    label_message: 'SÕNUM',
+    btn_send: 'Saada',
+    contact_fill_all: 'Palun täida kõik väljad.',
+    contact_opening_email: 'Avan e-postiprogrammi eeltäidetud kirjaga...',
+    admin_eyebrow: 'Halduspaneel',
+    login_title: 'Logi sisse',
+    label_password: 'PAROOL',
+    login_error: 'Vale e-post või parool, proovi uuesti.',
+    btn_login: 'Logi sisse',
+    forgot_password_link: 'Unustasin parooli',
+    reset_title: 'Parooli lähtestamine',
+    forgot_title: 'Unustasid parooli?',
+    forgot_intro: 'Sisesta oma kontoga seotud e-posti aadress — saadame sulle lähtestamislingi.',
+    btn_send_reset: 'Saada lähtestamislink',
+    back_to_login: '← Tagasi sisselogimise juurde',
+    check_inbox_title: 'Kontrolli oma postkasti',
+    check_inbox_intro: 'Kui see e-post on kontoga seotud, oleme saatnud sellele parooli lähtestamise lingi. Link kehtib 30 minutit.',
+    open_reset_demo: 'Ava lähtestamislink (prototüübi demo)',
+    new_password_title: 'Määra uus parool',
+    label_new_password: 'UUS PAROOL',
+    label_repeat_password: 'KORDA UUT PAROOLI',
+    reset_error: 'Paroolid ei kattu või on lühem kui 8 tähemärki.',
+    btn_save_new_password: 'Salvesta uus parool',
+  },
+  en: {
+    footer_kontakt: 'Contact',
+    footer_login: 'Log in',
+    footer_manage: 'Manage gallery',
+    footer_settings: 'Settings',
+    footer_logout: 'Log out',
+    home_eyebrow: 'Original paintings · oil and acrylic',
+    home_hero_title: 'Silence, light, and the Nordic landscape on canvas',
+    home_btn_gallery: 'View gallery',
+    home_btn_about: 'About the artist',
+    home_all_works: 'ALL WORKS →',
+    home_about_eyebrow: 'About the artist',
+    home_quote: '"I paint light that lingers for a moment — over the sea, in the corner of a room, in memory."',
+    home_read_more: 'READ MORE →',
+    portrait_placeholder: 'artist portrait',
+    gallery_eyebrow: 'Gallery',
+    gallery_title: 'All works',
+    gallery_empty: 'No works have been added yet.',
+    photo_pending: 'photo coming soon',
+    pill_email: 'Email',
+    sold_badge: 'SOLD',
+    back_to_gallery: '← BACK TO GALLERY',
+    painting_not_found: 'Painting not found.',
+    status_available: 'Available',
+    status_sold: 'Sold',
+    interested_label: 'Interested in this piece?',
+    email_btn: 'Send an email',
+    whatsapp_btn: 'Message on WhatsApp',
+    assurance_shipping: 'Free shipping within Estonia · 5–7 business days',
+    assurance_cert: 'Certificate of authenticity included',
+    assurance_return: '14-day return policy',
+    price_on_request: 'Price on request',
+    about_eyebrow: 'About the artist',
+    about_portrait_placeholder: 'artist portrait — photo',
+    about_bio1: "I graduated from the Estonian Academy of Arts with a degree in painting conservation. I'm drawn to a range of painting techniques and styles, and to using them in my own work.",
+    about_bio2: 'I often depict nature and the human figure, shifting perspective or moving toward a more abstract mode of representation. My work is also shaped by an interest in design, which supports a sensitive approach to composition and colour.',
+    about_cv_label: 'CV / SELECTED',
+    about_cv_education: 'Estonian Academy of Arts — painting conservation',
+    contact_eyebrow: 'Contact',
+    contact_title: 'Write to me',
+    contact_intro: 'Questions about paintings, commissions, or exhibitions are always welcome.',
+    contact_studio: 'Studio: Tallinn (visits by appointment)',
+    label_name: 'NAME',
+    label_email: 'EMAIL',
+    label_message: 'MESSAGE',
+    btn_send: 'Send',
+    contact_fill_all: 'Please fill in all fields.',
+    contact_opening_email: 'Opening your email client with a pre-filled message...',
+    admin_eyebrow: 'Admin panel',
+    login_title: 'Log in',
+    label_password: 'PASSWORD',
+    login_error: 'Wrong email or password, please try again.',
+    btn_login: 'Log in',
+    forgot_password_link: 'Forgot password',
+    reset_title: 'Password reset',
+    forgot_title: 'Forgot your password?',
+    forgot_intro: "Enter the email address linked to your account — we'll send you a reset link.",
+    btn_send_reset: 'Send reset link',
+    back_to_login: '← Back to login',
+    check_inbox_title: 'Check your inbox',
+    check_inbox_intro: 'If this email is linked to an account, we\'ve sent a password reset link to it. The link is valid for 30 minutes.',
+    open_reset_demo: 'Open reset link (prototype demo)',
+    new_password_title: 'Set a new password',
+    label_new_password: 'NEW PASSWORD',
+    label_repeat_password: 'REPEAT NEW PASSWORD',
+    reset_error: "Passwords don't match or are shorter than 8 characters.",
+    btn_save_new_password: 'Save new password',
+  },
+};
+
+const TECH_TRANSLATIONS = {
+  'Õli lõuendil': 'Oil on canvas',
+  'Akrüül lõuendil': 'Acrylic on canvas',
+  'Akrüül lõuendil, raamitud': 'Acrylic on canvas, framed',
+  'Akrüül paberil': 'Acrylic on paper',
+  'Akrüül paberil, raamitud': 'Acrylic on paper, framed',
+  'Kuivpastell': 'Dry pastel',
+  'Süsi': 'Charcoal',
+  'Pastakas paberil': 'Ballpoint pen on paper',
+  'Akrüül': 'Acrylic',
+  'Õli': 'Oil',
+};
+
+function t(key) {
+  return (I18N[state.lang] && I18N[state.lang][key]) || I18N.et[key] || key;
+}
+
+function translateTech(tech) {
+  if (state.lang !== 'en') return tech;
+  return TECH_TRANSLATIONS[tech] || tech;
+}
 
 const uiState = {
   loginError: false,
@@ -37,8 +200,9 @@ function esc(s) {
 }
 
 function fmt(n) {
-  if (n == null || n === '') return 'Hind küsimisel';
-  return Number(n).toLocaleString('et-EE').replace(/ /g, ' ') + ' €';
+  if (n == null || n === '') return t('price_on_request');
+  const locale = state.lang === 'en' ? 'en-US' : 'et-EE';
+  return Number(n).toLocaleString(locale).replace(/ /g, ' ') + ' €';
 }
 
 function seedPaintings() {
@@ -105,6 +269,13 @@ function loadState() {
   try { state.adminEmail = localStorage.getItem(EMAIL_KEY) || DEFAULT_ADMIN_EMAIL; } catch (e) {}
   try { state.adminPassword = localStorage.getItem(PW_KEY) || DEFAULT_ADMIN_PASSWORD; } catch (e) {}
   try { state.showSold = localStorage.getItem(SHOW_SOLD_KEY) !== '0'; } catch (e) {}
+  try { state.lang = localStorage.getItem(LANG_KEY) || 'et'; } catch (e) {}
+}
+
+function setLang(lang) {
+  state.lang = lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+  rerender();
 }
 
 function persistPaintings() {
@@ -120,17 +291,24 @@ function persistCreds(email, password) {
 
 function decorate(p) {
   const priceStr = fmt(p.price);
-  const subject = 'Päring: ' + p.title;
-  const bodyLines = ['Tere,', '', 'Huvitun maalist „' + p.title + '"' + (p.price != null ? ' (' + priceStr + ')' : '') + '.', ''];
+  let subject, bodyLines, waText;
+  if (state.lang === 'en') {
+    subject = 'Inquiry: ' + p.title;
+    bodyLines = ['Hello,', '', 'I\'m interested in the painting "' + p.title + '"' + (p.price != null ? ' (' + priceStr + ')' : '') + '.', ''];
+    waText = 'Hi, I\'m interested in the painting "' + p.title + '"' + (p.price != null ? ' (' + priceStr + ')' : '') + '.';
+  } else {
+    subject = 'Päring: ' + p.title;
+    bodyLines = ['Tere,', '', 'Huvitun maalist „' + p.title + '"' + (p.price != null ? ' (' + priceStr + ')' : '') + '.', ''];
+    waText = 'Tere, huvitun maalist „' + p.title + '"' + (p.price != null ? ' (' + priceStr + ')' : '') + '.';
+  }
   const mailtoHref = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(bodyLines.join('\n'));
-  const waText = 'Tere, huvitun maalist „' + p.title + '"' + (p.price != null ? ' (' + priceStr + ')' : '') + '.';
   const waHref = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waText);
   return {
     ...p,
     priceStr,
-    meta: [p.tech, p.size, p.year].filter(Boolean).join(' · '),
+    meta: [translateTech(p.tech), p.size, p.year].filter(Boolean).join(' · '),
     avail: !p.sold,
-    status: p.sold ? 'Müüdud' : 'Saadaval',
+    status: p.sold ? t('status_sold') : t('status_available'),
     mailtoHref,
     waHref,
   };
@@ -140,7 +318,7 @@ function imgBox(p, extraClass) {
   if (p.img) {
     return `<div class="imgbox ${extraClass || ''}"><img src="${esc(p.img)}" alt="${esc(p.title)}" loading="lazy"></div>`;
   }
-  return `<div class="imgbox ${extraClass || ''}"><span>foto lisandumas</span></div>`;
+  return `<div class="imgbox ${extraClass || ''}"><span>${esc(t('photo_pending'))}</span></div>`;
 }
 
 /* ===== Router ===== */
@@ -174,17 +352,28 @@ function rerender() {
 /* ===== Header ===== */
 
 function renderHeader() {
+  const kontaktLink = document.getElementById('footer-kontakt-link');
+  if (kontaktLink) kontaktLink.textContent = t('footer_kontakt');
   const actions = document.getElementById('footer-actions');
-  if (!actions) return;
-  if (state.loggedIn) {
-    actions.innerHTML = `
-      <span data-nav="haldus">Halda galeriid</span>
-      · <span data-nav="seaded">Seaded</span>
-      · <span data-action="logout">Logi välja</span>
-    `;
-  } else {
-    actions.innerHTML = `<span data-nav="login">Logi sisse</span>`;
+  if (actions) {
+    if (state.loggedIn) {
+      actions.innerHTML = `
+        <span data-nav="haldus">${esc(t('footer_manage'))}</span>
+        · <span data-nav="seaded">${esc(t('footer_settings'))}</span>
+        · <span data-action="logout">${esc(t('footer_logout'))}</span>
+      `;
+    } else {
+      actions.innerHTML = `<span data-nav="login">${esc(t('footer_login'))}</span>`;
+    }
   }
+  const langEl = document.getElementById('lang-toggle');
+  if (langEl) {
+    langEl.innerHTML = `
+      <span data-action="set-lang-et" class="${state.lang === 'et' ? 'lang-on' : ''}">ET</span>
+      / <span data-action="set-lang-en" class="${state.lang === 'en' ? 'lang-on' : ''}">EN</span>
+    `;
+  }
+  document.title = state.lang === 'en' ? 'Regina Pruul — paintings' : 'Regina Pruul — maalikunst';
 }
 
 /* ===== Screens ===== */
@@ -204,21 +393,21 @@ function screenAvaleht() {
 
   return `
     <div class="hero">
-      <p class="eyebrow">Originaalmaalid · õli ja akrüül</p>
-      <h1>Vaikus, valgus ja põhjamaine maastik lõuendil</h1>
+      <p class="eyebrow">${esc(t('home_eyebrow'))}</p>
+      <h1>${esc(t('home_hero_title'))}</h1>
       <div class="hero-actions">
-        <button class="btn btn-primary" data-nav="galerii">Vaata galeriid</button>
-        <button class="btn btn-outline" data-nav="kunstnikust">Kunstnikust</button>
+        <button class="btn btn-primary" data-nav="galerii">${esc(t('home_btn_gallery'))}</button>
+        <button class="btn btn-outline" data-nav="kunstnikust">${esc(t('home_btn_about'))}</button>
       </div>
     </div>
     <div class="featured-grid">${featuredHtml}</div>
-    <div class="all-works-link"><span data-nav="galerii">KÕIK TÖÖD →</span></div>
+    <div class="all-works-link"><span data-nav="galerii">${esc(t('home_all_works'))}</span></div>
     <div class="quote-block">
-      <div class="placeholder-block"><span>kunstniku portree</span></div>
+      <div class="placeholder-block"><span>${esc(t('portrait_placeholder'))}</span></div>
       <div>
-        <p class="eyebrow">Kunstnikust</p>
-        <p class="quote-text">„Maalin valgust, mis jääb hetkeks pidama — mere kohal, toa nurgas, mälestuses."</p>
-        <p class="quote-more" data-nav="kunstnikust">LOE EDASI →</p>
+        <p class="eyebrow">${esc(t('home_about_eyebrow'))}</p>
+        <p class="quote-text">${esc(t('home_quote'))}</p>
+        <p class="quote-more" data-nav="kunstnikust">${esc(t('home_read_more'))}</p>
       </div>
     </div>
   `;
@@ -236,11 +425,11 @@ function screenGalerii() {
       </div>
       <div class="painting-meta-row">
         <span class="painting-meta">${esc(p.meta)}</span>
-        ${p.sold ? '<span class="sold-badge">MÜÜDUD</span>' : ''}
+        ${p.sold ? `<span class="sold-badge">${esc(t('sold_badge'))}</span>` : ''}
       </div>
       ${p.avail ? `
         <div class="contact-pills">
-          <a class="pill pill-email" href="${p.mailtoHref}">✉ E-post</a>
+          <a class="pill pill-email" href="${p.mailtoHref}">✉ ${esc(t('pill_email'))}</a>
           <a class="pill pill-whatsapp" href="${p.waHref}" target="_blank" rel="noopener">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.2h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.06h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.11.82.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.4c0-4.53 3.69-8.22 8.24-8.22 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.81c0 4.53-3.7 8.23-8.25 8.23z"></path></svg>
             WhatsApp
@@ -252,9 +441,9 @@ function screenGalerii() {
 
   return `
     <div class="page-section">
-      <p class="eyebrow">Galerii</p>
-      <h1 class="page-title">Kõik tööd</h1>
-      <div class="gallery-grid">${cards || '<p style="color:var(--text-tertiary)">Töid ei ole hetkel lisatud.</p>'}</div>
+      <p class="eyebrow">${esc(t('gallery_eyebrow'))}</p>
+      <h1 class="page-title">${esc(t('gallery_title'))}</h1>
+      <div class="gallery-grid">${cards || `<p style="color:var(--text-tertiary)">${esc(t('gallery_empty'))}</p>`}</div>
     </div>
   `;
 }
@@ -262,12 +451,12 @@ function screenGalerii() {
 function screenMaal(id) {
   const raw = state.paintings.find((p) => String(p.id) === String(id)) || state.paintings[0];
   if (!raw) {
-    return `<div class="page-section"><p>Maali ei leitud.</p></div>`;
+    return `<div class="page-section"><p>${esc(t('painting_not_found'))}</p></div>`;
   }
   const p = decorate(raw);
   return `
     <div class="page-section">
-      <span class="back-link" data-nav="galerii">← TAGASI GALERIISSE</span>
+      <span class="back-link" data-nav="galerii">${esc(t('back_to_gallery'))}</span>
       <div class="painting-detail">
         ${imgBox(p)}
         <div>
@@ -278,20 +467,20 @@ function screenMaal(id) {
           <p class="price">${esc(p.priceStr)}</p>
           ${p.avail ? `
             <div class="interest-block">
-              <p class="interest-label">Huvitatud sellest tööst?</p>
+              <p class="interest-label">${esc(t('interested_label'))}</p>
               <div class="interest-buttons">
-                <a class="btn-block email-btn" href="${p.mailtoHref}"><span>✉</span> Kirjuta e-mailile</a>
+                <a class="btn-block email-btn" href="${p.mailtoHref}"><span>✉</span> ${esc(t('email_btn'))}</a>
                 <a class="btn-block whatsapp-btn" href="${p.waHref}" target="_blank" rel="noopener">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.2h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.06h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.11.82.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.4c0-4.53 3.69-8.22 8.24-8.22 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.81c0 4.53-3.7 8.23-8.25 8.23z"></path></svg>
-                  Kirjuta WhatsAppis
+                  ${esc(t('whatsapp_btn'))}
                 </a>
               </div>
             </div>
-          ` : `<div class="sold-block"><span>MÜÜDUD</span></div>`}
+          ` : `<div class="sold-block"><span>${esc(t('sold_badge'))}</span></div>`}
           <div class="assurances">
-            <span>Tasuta transport Eestis · 5–7 tööpäeva</span>
-            <span>Autori sertifikaat kaasas</span>
-            <span>14-päevane tagastusõigus</span>
+            <span>${esc(t('assurance_shipping'))}</span>
+            <span>${esc(t('assurance_cert'))}</span>
+            <span>${esc(t('assurance_return'))}</span>
           </div>
         </div>
       </div>
@@ -303,16 +492,16 @@ function screenKunstnikust() {
   return `
     <div class="page-section">
       <div class="about-grid">
-        <div class="placeholder-block"><span>kunstniku portree — foto</span></div>
+        <div class="placeholder-block"><span>${esc(t('about_portrait_placeholder'))}</span></div>
         <div class="about-body">
-          <p class="eyebrow">Kunstnikust</p>
+          <p class="eyebrow">${esc(t('about_eyebrow'))}</p>
           <h1>Regina Pruul</h1>
-          <p>Olen lõpetanud Eesti Kunstiakadeemia maali konserveerimise eriala. Mind huvitavad erinevad maalitehnikad ja stiilid ning nende kasutamine oma loomingus.</p>
-          <p>Kujutan sageli loodust ja inimest, nihestades vaatenurka või liikudes abstraktsema kujutamisviisi suunas. Minu töid mõjutab ka huvi disaini vastu, mis toetab tundlikku kompositsiooni- ja värvikäsitlust.</p>
+          <p>${esc(t('about_bio1'))}</p>
+          <p>${esc(t('about_bio2'))}</p>
           <div class="cv-block">
-            <p class="label">CV / VALIK</p>
+            <p class="label">${esc(t('about_cv_label'))}</p>
             <div class="cv-list">
-              <span>Eesti Kunstiakadeemia — maali konserveerimise eriala</span>
+              <span>${esc(t('about_cv_education'))}</span>
             </div>
           </div>
         </div>
@@ -353,22 +542,22 @@ function screenKontakt() {
     <div class="page-section">
       <div class="contact-grid">
         <div class="contact-info">
-          <p class="eyebrow">Kontakt</p>
-          <h1>Kirjuta mulle</h1>
-          <p>Küsimused maalide, tellimustööde või näituste kohta on alati teretulnud.</p>
+          <p class="eyebrow">${esc(t('contact_eyebrow'))}</p>
+          <h1>${esc(t('contact_title'))}</h1>
+          <p>${esc(t('contact_intro'))}</p>
           <div class="contact-details">
             <span>${esc(CONTACT_EMAIL)}</span>
             <span>${esc(WHATSAPP_DISPLAY)}</span>
-            <span>Ateljee: Tallinn (külastus kokkuleppel)</span>
+            <span>${esc(t('contact_studio'))}</span>
             <span>Instagram: @reginapruul</span>
           </div>
         </div>
         <div class="contact-form">
-          <div class="form-field"><label>NIMI</label><input id="contact-name" type="text"></div>
-          <div class="form-field"><label>E-POST</label><input id="contact-email" type="email"></div>
-          <div class="form-field"><label>SÕNUM</label><textarea id="contact-message" rows="6"></textarea></div>
+          <div class="form-field"><label>${esc(t('label_name'))}</label><input id="contact-name" type="text"></div>
+          <div class="form-field"><label>${esc(t('label_email'))}</label><input id="contact-email" type="email"></div>
+          <div class="form-field"><label>${esc(t('label_message'))}</label><textarea id="contact-message" rows="6"></textarea></div>
           <p id="contact-note" class="form-note" hidden></p>
-          <button class="btn btn-primary" style="align-self:flex-start" data-action="contact-submit">Saada</button>
+          <button class="btn btn-primary" style="align-self:flex-start" data-action="contact-submit">${esc(t('btn_send'))}</button>
         </div>
       </div>
     </div>
@@ -378,14 +567,14 @@ function screenKontakt() {
 function screenLogin() {
   return `
     <div class="auth-page">
-      <p class="eyebrow">Halduspaneel</p>
-      <h1>Logi sisse</h1>
+      <p class="eyebrow">${esc(t('admin_eyebrow'))}</p>
+      <h1>${esc(t('login_title'))}</h1>
       <div class="auth-form">
-        <div class="form-field"><label>E-POST</label><input id="login-email" type="email"></div>
-        <div class="form-field"><label>PAROOL</label><input id="login-pw" type="password"></div>
-        ${uiState.loginError ? '<p class="error-text">Vale e-post või parool, proovi uuesti.</p>' : ''}
-        <button class="btn btn-primary" data-action="login-submit">Logi sisse</button>
-        <span class="auth-back" data-nav="unustasin">Unustasin parooli</span>
+        <div class="form-field"><label>${esc(t('label_email'))}</label><input id="login-email" type="email"></div>
+        <div class="form-field"><label>${esc(t('label_password'))}</label><input id="login-pw" type="password"></div>
+        ${uiState.loginError ? `<p class="error-text">${esc(t('login_error'))}</p>` : ''}
+        <button class="btn btn-primary" data-action="login-submit">${esc(t('btn_login'))}</button>
+        <span class="auth-back" data-nav="unustasin">${esc(t('forgot_password_link'))}</span>
       </div>
     </div>
   `;
@@ -394,13 +583,13 @@ function screenLogin() {
 function screenUnustasin() {
   return `
     <div class="auth-page">
-      <p class="eyebrow">Parooli lähtestamine</p>
-      <h1>Unustasid parooli?</h1>
-      <p class="intro">Sisesta oma kontoga seotud e-posti aadress — saadame sulle lähtestamislingi.</p>
+      <p class="eyebrow">${esc(t('reset_title'))}</p>
+      <h1>${esc(t('forgot_title'))}</h1>
+      <p class="intro">${esc(t('forgot_intro'))}</p>
       <div class="auth-form">
-        <div class="form-field"><label>E-POST</label><input id="forgot-email" type="email"></div>
-        <button class="btn btn-primary" data-action="forgot-submit">Saada lähtestamislink</button>
-        <span class="auth-back" data-nav="login">← Tagasi sisselogimise juurde</span>
+        <div class="form-field"><label>${esc(t('label_email'))}</label><input id="forgot-email" type="email"></div>
+        <button class="btn btn-primary" data-action="forgot-submit">${esc(t('btn_send_reset'))}</button>
+        <span class="auth-back" data-nav="login">${esc(t('back_to_login'))}</span>
       </div>
     </div>
   `;
@@ -409,12 +598,12 @@ function screenUnustasin() {
 function screenUnustasinSaadetud() {
   return `
     <div class="auth-page">
-      <p class="eyebrow">Parooli lähtestamine</p>
-      <h1 style="font-style:italic">Kontrolli oma postkasti</h1>
-      <p class="intro">Kui see e-post on kontoga seotud, oleme saatnud sellele parooli lähtestamise lingi. Link kehtib 30 minutit.</p>
+      <p class="eyebrow">${esc(t('reset_title'))}</p>
+      <h1 style="font-style:italic">${esc(t('check_inbox_title'))}</h1>
+      <p class="intro">${esc(t('check_inbox_intro'))}</p>
       <div class="auth-form">
-        <button class="btn btn-outline" data-nav="lahtesta">Ava lähtestamislink (prototüübi demo)</button>
-        <span class="auth-back" data-nav="login">← Tagasi sisselogimise juurde</span>
+        <button class="btn btn-outline" data-nav="lahtesta">${esc(t('open_reset_demo'))}</button>
+        <span class="auth-back" data-nav="login">${esc(t('back_to_login'))}</span>
       </div>
     </div>
   `;
@@ -423,13 +612,13 @@ function screenUnustasinSaadetud() {
 function screenLahtesta() {
   return `
     <div class="auth-page">
-      <p class="eyebrow">Parooli lähtestamine</p>
-      <h1>Määra uus parool</h1>
+      <p class="eyebrow">${esc(t('reset_title'))}</p>
+      <h1>${esc(t('new_password_title'))}</h1>
       <div class="auth-form">
-        <div class="form-field"><label>UUS PAROOL</label><input id="reset-pw1" type="password"></div>
-        <div class="form-field"><label>KORDA UUT PAROOLI</label><input id="reset-pw2" type="password"></div>
-        ${uiState.resetError ? '<p class="error-text">Paroolid ei kattu või on lühem kui 8 tähemärki.</p>' : ''}
-        <button class="btn btn-primary" data-action="reset-submit">Salvesta uus parool</button>
+        <div class="form-field"><label>${esc(t('label_new_password'))}</label><input id="reset-pw1" type="password"></div>
+        <div class="form-field"><label>${esc(t('label_repeat_password'))}</label><input id="reset-pw2" type="password"></div>
+        ${uiState.resetError ? `<p class="error-text">${esc(t('reset_error'))}</p>` : ''}
+        <button class="btn btn-primary" data-action="reset-submit">${esc(t('btn_save_new_password'))}</button>
       </div>
     </div>
   `;
@@ -564,6 +753,9 @@ function handleAction(el) {
     return;
   }
 
+  if (action === 'set-lang-et') { setLang('et'); return; }
+  if (action === 'set-lang-en') { setLang('en'); return; }
+
   if (action === 'login-submit') {
     const email = document.getElementById('login-email').value.trim().toLowerCase();
     const pw = document.getElementById('login-pw').value;
@@ -693,15 +885,16 @@ function handleAction(el) {
     const message = document.getElementById('contact-message').value.trim();
     const note = document.getElementById('contact-note');
     if (!name || !email || !message) {
-      note.textContent = 'Palun täida kõik väljad.';
+      note.textContent = t('contact_fill_all');
       note.className = 'form-note error';
       note.hidden = false;
       return;
     }
-    const subject = 'Kontaktivorm — ' + name;
-    const body = 'Nimi: ' + name + '\nE-post: ' + email + '\n\n' + message;
+    const subject = (state.lang === 'en' ? 'Contact form — ' : 'Kontaktivorm — ') + name;
+    const bodyLabel = state.lang === 'en' ? 'Name: ' + name + '\nEmail: ' + email : 'Nimi: ' + name + '\nE-post: ' + email;
+    const body = bodyLabel + '\n\n' + message;
     const href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    note.textContent = 'Avan e-postiprogrammi eeltäidetud kirjaga...';
+    note.textContent = t('contact_opening_email');
     note.className = 'form-note success';
     note.hidden = false;
     window.location.href = href;
