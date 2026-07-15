@@ -1,24 +1,27 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const STORAGE_KEY = 'rp_paintings_v7';
-const AUTH_KEY = 'rp_admin_logged_v1';
-const EMAIL_KEY = 'rp_admin_email_v1';
-const PW_KEY = 'rp_admin_pw_v1';
+const SUPABASE_URL = 'https://wuzlpmhttrzqchijpidi.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1emxwbWh0dHJ6cWNoaWpwaWRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxMDYyOTMsImV4cCI6MjA5OTY4MjI5M30.m3XSAxcynzMsYgfZutPLEkPGp8AEty0yiiiJrlWpMoI';
+
+if (!window.supabase) {
+  document.getElementById('page').innerHTML = '<div class="page-section"><p>Lehe laadimine ebaõnnestus (võrguühenduse probleem). Palun proovi lehte värskendada.</p></div>';
+  throw new Error('Supabase client library failed to load from CDN');
+}
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const SHOW_SOLD_KEY = 'rp_show_sold_v1';
 const LANG_KEY = 'rp_lang_v1';
 
-const DEFAULT_ADMIN_EMAIL = 'regina.hirtentreu@gmail.com';
-const DEFAULT_ADMIN_PASSWORD = 'Pildigalerii';
 const CONTACT_EMAIL = 'regina.hirtentreu@gmail.com';
 const WHATSAPP_NUMBER = '37258090777';
 const WHATSAPP_DISPLAY = '+372 5809 0777';
 
 const state = {
   paintings: [],
-  nextId: 1,
+  loading: true,
   loggedIn: false,
-  adminEmail: DEFAULT_ADMIN_EMAIL,
-  adminPassword: DEFAULT_ADMIN_PASSWORD,
+  adminEmail: '',
   showSold: true,
   lang: 'et',
 };
@@ -84,13 +87,13 @@ const I18N = {
     btn_send_reset: 'Saada lähtestamislink',
     back_to_login: '← Tagasi sisselogimise juurde',
     check_inbox_title: 'Kontrolli oma postkasti',
-    check_inbox_intro: 'Kui see e-post on kontoga seotud, oleme saatnud sellele parooli lähtestamise lingi. Link kehtib 30 minutit.',
-    open_reset_demo: 'Ava lähtestamislink (prototüübi demo)',
+    check_inbox_intro: 'Kui see e-post on kontoga seotud, oleme saatnud sellele parooli lähtestamise lingi.',
     new_password_title: 'Määra uus parool',
     label_new_password: 'UUS PAROOL',
     label_repeat_password: 'KORDA UUT PAROOLI',
     reset_error: 'Paroolid ei kattu või on lühem kui 8 tähemärki.',
     btn_save_new_password: 'Salvesta uus parool',
+    loading: 'Laen...',
   },
   en: {
     footer_kontakt: 'Contact',
@@ -152,13 +155,13 @@ const I18N = {
     btn_send_reset: 'Send reset link',
     back_to_login: '← Back to login',
     check_inbox_title: 'Check your inbox',
-    check_inbox_intro: 'If this email is linked to an account, we\'ve sent a password reset link to it. The link is valid for 30 minutes.',
-    open_reset_demo: 'Open reset link (prototype demo)',
+    check_inbox_intro: "If this email is linked to an account, we've sent a password reset link to it.",
     new_password_title: 'Set a new password',
     label_new_password: 'NEW PASSWORD',
     label_repeat_password: 'REPEAT NEW PASSWORD',
     reset_error: "Passwords don't match or are shorter than 8 characters.",
     btn_save_new_password: 'Save new password',
+    loading: 'Loading...',
   },
 };
 
@@ -185,8 +188,7 @@ function translateTech(tech) {
 }
 
 const uiState = {
-  loginError: false,
-  forgotSubmitted: false,
+  loginError: '',
   resetError: false,
   settingsError: false,
   settingsErrorMsg: '',
@@ -202,91 +204,39 @@ function esc(s) {
 function fmt(n) {
   if (n == null || n === '') return t('price_on_request');
   const locale = state.lang === 'en' ? 'en-US' : 'et-EE';
-  return Number(n).toLocaleString(locale).replace(/ /g, ' ') + ' €';
+  return Number(n).toLocaleString(locale).replace(/ /g, ' ') + ' €';
 }
 
-function seedPaintings() {
-  const withPhoto = [
-    { title: "Päikeseloojang merekaldal", tech: "Õli lõuendil", size: "80 × 100 cm", year: 2026, price: 4000, sold: false, img: "uploads/IMG_5935.jpeg" },
-    { title: "Õitsenud tulbiõis", tech: "Õli lõuendil", size: "80 × 100 cm", year: 2026, price: 4000, sold: false, img: "uploads/IMG_6886.jpeg" },
-    { title: "Rannarõõmud", tech: "Õli lõuendil", size: "70 × 90 cm", year: 2025, price: 3000, sold: false, img: "uploads/0FC23549-0673-40EE-A4E6-6CE5946FEC02.jpeg" },
-    { title: "Linnamöll", tech: "Akrüül lõuendil", size: "40 × 60 cm", year: 2025, price: 2500, sold: false, img: "uploads/53cc8d0d-32cd-4067-9598-f4dd9df23dfb.jpeg" },
-    { title: "Nõmm koos metsatukaga", tech: "Akrüül lõuendil", size: "70 × 70 cm", year: 2025, price: 2500, sold: false, img: "uploads/IMG_3052.jpeg" },
-    { title: "Ambaal ujumas", tech: "Õli lõuendil", size: "70 × 100 cm", year: 2025, price: 3000, sold: false, img: "uploads/IMG_4395.jpeg" },
-    { title: "Kiigel", tech: "Akrüül lõuendil", size: "70 × 70 cm", year: 2025, price: null, sold: true, img: "uploads/IMG_3132.jpeg" },
-    { title: "Puupea", tech: "Akrüül lõuendil", size: "60 × 80 cm", year: 2024, price: 750, sold: false, img: "uploads/b64f69a5-68ec-4fbc-91a7-ae45546ccbcf.jpeg" },
-    { title: "Landscape", tech: "Akrüül lõuendil", size: "70 × 90 cm", year: 2023, price: 2500, sold: false, img: "uploads/IMG_0789.jpeg" },
-    { title: "Voolamine", tech: "Akrüül lõuendil", size: "60 × 150 cm", year: 2023, price: 1200, sold: false, img: "uploads/IMG_0802.jpeg" },
-    { title: "Klaaskuul", tech: "Akrüül papil", size: "59 × 84 cm", year: 2021, price: 75, sold: false, img: "uploads/IMG_2343.jpeg" },
-    { title: "Merevaade", tech: "Õli lõuendil", size: "50 × 60 cm", year: 2021, price: null, sold: true, img: "uploads/IMG_7566.jpeg" },
-    { title: "Karge mets", tech: "Õli lõuendil", size: "60 × 70 cm", year: 2021, price: null, sold: true, img: "uploads/IMG_7962.jpeg" },
-    { title: "Karukellad", tech: "Õli lõuendil", size: "55 × 80 cm", year: 2021, price: 350, sold: false, img: "uploads/IMG_8722.jpeg" },
-    { title: "Elu kastis", tech: "Akrüül", size: "50 × 50 cm", year: 2021, price: 250, sold: false, img: "uploads/IMG_8743.jpeg" },
-    { title: "Kontsentriline", tech: "Akrüül", size: "50 × 50 cm", year: 2021, price: 250, sold: false, img: "uploads/IMG_8746.jpeg" },
-    { title: "Mures tuleviku pärast", tech: "Õli lõuendil", size: "60 × 80 cm", year: 2021, price: 750, sold: false, img: "uploads/IMG_9954.jpeg" },
-    { title: "Corgi terrassil (Ruutu)", tech: "Õli lõuendil", size: "60 × 80 cm", year: 2020, price: null, sold: true, img: "uploads/IMG_0324.jpeg" },
-    { title: "Varjud metsas", tech: "Akrüül lõuendil, raamitud", size: "62 × 100 cm", year: 2020, price: 750, sold: false, img: "uploads/IMG_0794.jpeg" },
-    { title: "Rohetants", tech: "Akrüül lõuendil", size: "50 × 70 cm", year: 2020, price: 500, sold: false, img: "uploads/IMG_5673.jpeg" },
-    { title: "Udune niit", tech: "Õli lõuendil", size: "51 × 60 cm", year: 2020, price: null, sold: true, img: "uploads/IMG_5819.jpeg" },
-    { title: "Veritas", tech: "Õli lõuendil", size: "59 × 84 cm", year: 2019, price: null, sold: true, img: "uploads/IMG_7521.jpeg" },
-    { title: "Vannipart", tech: "Kuivpastell", size: "62 × 76 cm", year: 2018, price: null, sold: true, img: "uploads/IMG_0340.jpeg" },
-    { title: "Miski südames", tech: "Õli", size: "50 × 60 cm", year: 2017, price: 350, sold: false, img: "uploads/IMG_8154_Original.jpeg" },
-    { title: "Seenemikk", tech: "Õli", size: "70 × 100 cm", year: 2017, price: null, sold: true, img: "uploads/IMG_8842_Original.jpeg" },
-    { title: "Kollakas kolmapäev", tech: "Akrüül paberil, raamitud", size: "77 × 61 cm", year: 2017, price: 95, sold: false, img: "uploads/IMG_6714.jpeg" },
-    { title: "Virsik", tech: "Akrüül paberil, raamitud", size: "85 × 67 cm", year: 2017, price: null, sold: true, img: "uploads/IMG_9252_Original.jpeg" },
-    { title: "Segaduses kala", tech: "Akrüül paberil", size: "83 × 64 cm", year: 2017, price: null, sold: true, img: "uploads/IMG_9254_Original.jpeg" },
-    { title: "Avatar", tech: "Akrüül paberil", size: "65 × 76 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_4971_1.jpeg" },
-    { title: "Mets", tech: "Õli lõuendil", size: "70 × 100 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5046.jpeg" },
-    { title: "Mõtte peegeldus", tech: "Akrüül paberil", size: "77 × 61 cm", year: 2016, price: 350, sold: false, img: "uploads/IMG_5231_Original.jpeg" },
-    { title: "Hundu", tech: "Kuivpastell", size: "59 × 84 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5256.jpeg" },
-    { title: "Masenduse hetk", tech: "Õli", size: "77 × 61 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5329.jpeg" },
-    { title: "Figuur", tech: "Süsi", size: "59 × 84 cm", year: 2016, price: null, sold: true, img: "uploads/IMG_5265.jpeg" },
-    { title: "Silmside", tech: "Pastakas paberil", size: "65 × 76 cm", year: 2016, price: 75, sold: false, img: "uploads/IMG_6510.jpeg" },
-    { title: "Leht", tech: "Akrüül paberil", size: "65 × 79 cm", year: 2014, price: 300, sold: false, img: "uploads/DSC01733.jpeg" },
-    { title: "Bob", tech: "Õli lõuendil", size: "50 × 60 cm", year: 2013, price: null, sold: true, img: "uploads/IMG_5169.jpeg" },
-  ];
-  const photoPending = [];
-  return [...withPhoto, ...photoPending].map((p, i) => ({
-    id: i + 1,
-    title: p.title,
-    tech: p.tech,
-    size: p.size,
-    year: p.year,
-    price: p.price,
-    sold: p.sold,
-    desc: '',
-    img: p.img || null,
-  }));
+function mapRow(r) {
+  return {
+    id: r.id,
+    title: r.title,
+    tech: r.tech,
+    size: r.size,
+    year: r.year,
+    price: r.price,
+    sold: r.sold,
+    desc: r.description || '',
+    img: r.image_url,
+    position: r.position,
+  };
 }
 
-function loadState() {
-  let saved = null;
-  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (e) {}
-  state.paintings = (saved && Array.isArray(saved) && saved.length) ? saved : seedPaintings();
-  state.nextId = state.paintings.reduce((m, p) => Math.max(m, p.id), 0) + 1;
-
-  try { state.loggedIn = localStorage.getItem(AUTH_KEY) === '1'; } catch (e) {}
-  try { state.adminEmail = localStorage.getItem(EMAIL_KEY) || DEFAULT_ADMIN_EMAIL; } catch (e) {}
-  try { state.adminPassword = localStorage.getItem(PW_KEY) || DEFAULT_ADMIN_PASSWORD; } catch (e) {}
-  try { state.showSold = localStorage.getItem(SHOW_SOLD_KEY) !== '0'; } catch (e) {}
-  try { state.lang = localStorage.getItem(LANG_KEY) || 'et'; } catch (e) {}
+async function loadPaintings() {
+  const { data, error } = await sb.from('paintings').select('*').order('position', { ascending: true });
+  if (error) {
+    console.error('loadPaintings error', error);
+    state.paintings = [];
+  } else {
+    state.paintings = (data || []).map(mapRow);
+  }
+  state.loading = false;
 }
 
 function setLang(lang) {
   state.lang = lang;
   try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   rerender();
-}
-
-function persistPaintings() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.paintings)); } catch (e) {}
-}
-
-function persistCreds(email, password) {
-  try {
-    localStorage.setItem(EMAIL_KEY, email);
-    localStorage.setItem(PW_KEY, password);
-  } catch (e) {}
 }
 
 function decorate(p) {
@@ -572,7 +522,7 @@ function screenLogin() {
       <div class="auth-form">
         <div class="form-field"><label>${esc(t('label_email'))}</label><input id="login-email" type="email"></div>
         <div class="form-field"><label>${esc(t('label_password'))}</label><input id="login-pw" type="password"></div>
-        ${uiState.loginError ? `<p class="error-text">${esc(t('login_error'))}</p>` : ''}
+        ${uiState.loginError ? `<p class="error-text">${esc(uiState.loginError)}</p>` : ''}
         <button class="btn btn-primary" data-action="login-submit">${esc(t('btn_login'))}</button>
         <span class="auth-back" data-nav="unustasin">${esc(t('forgot_password_link'))}</span>
       </div>
@@ -602,7 +552,6 @@ function screenUnustasinSaadetud() {
       <h1 style="font-style:italic">${esc(t('check_inbox_title'))}</h1>
       <p class="intro">${esc(t('check_inbox_intro'))}</p>
       <div class="auth-form">
-        <button class="btn btn-outline" data-nav="lahtesta">${esc(t('open_reset_demo'))}</button>
         <span class="auth-back" data-nav="login">${esc(t('back_to_login'))}</span>
       </div>
     </div>
@@ -632,8 +581,7 @@ function screenSeaded() {
       <div class="settings-form">
         <div class="form-field"><label>E-POST</label><input id="settings-email" type="email" value="${esc(state.adminEmail)}"></div>
         <div class="settings-divider"></div>
-        <p class="settings-hint">Parooli muutmiseks sisesta praegune parool ja uus parool.</p>
-        <div class="form-field"><label>PRAEGUNE PAROOL</label><input id="settings-current-pw" type="password"></div>
+        <p class="settings-hint">Uue e-posti sisestamisel saadetakse kinnituslink uuele aadressile.</p>
         <div class="form-field"><label>UUS PAROOL (valikuline)</label><input id="settings-new-pw" type="password"></div>
         ${uiState.settingsError ? `<p class="error-text">${esc(uiState.settingsErrorMsg)}</p>` : ''}
         ${uiState.settingsSaved ? '<p class="success-text">Salvestatud.</p>' : ''}
@@ -649,9 +597,7 @@ function screenSeaded() {
 }
 
 function screenHaldus() {
-  const items = state.paintings.map((p, idx) => {
-    const d = decorate(p);
-    return `
+  const items = state.paintings.map((p, idx) => `
       <div class="admin-item">
         <div class="admin-thumb-col">
           <div class="admin-move">
@@ -686,8 +632,7 @@ function screenHaldus() {
           </div>
         </div>
       </div>
-    `;
-  }).join('');
+  `).join('');
 
   return `
     <div class="page-section">
@@ -698,7 +643,7 @@ function screenHaldus() {
         </div>
         <button class="btn btn-primary" data-action="add-painting">+ Lisa uus maal</button>
       </div>
-      <p class="admin-hint">Muudatused salvestatakse selles brauseris automaatselt. Iga maali juures saad vahetada pilti, muuta pealkirja, mõõtu, tehnikat, hinda ja kirjeldust, märkida kas töö on saadaval või müüdud, ning ↑/↓ nooltega muuta piltide järjekorda galeriis ja avalehel.</p>
+      <p class="admin-hint">Muudatused salvestatakse päris andmebaasi ja kehtivad kohe kõigile külastajatele. Iga maali juures saad vahetada pilti, muuta pealkirja, mõõtu, tehnikat, hinda ja kirjeldust, märkida kas töö on saadaval või müüdud, ning ↑/↓ nooltega muuta piltide järjekorda galeriis ja avalehel.</p>
       ${items || '<p style="color:var(--text-tertiary)">Ühtegi maali pole veel lisatud.</p>'}
     </div>
   `;
@@ -728,26 +673,21 @@ function render(page, param) {
 
 /* ===== Actions ===== */
 
-function updatePaintingField(id, field, value) {
+async function updatePaintingField(id, field, value) {
   const p = state.paintings.find((x) => String(x.id) === String(id));
   if (!p) return;
   p[field] = value;
-  persistPaintings();
+  const dbField = field === 'desc' ? 'description' : field;
+  const { error } = await sb.from('paintings').update({ [dbField]: value }).eq('id', id);
+  if (error) console.error('updatePaintingField error', error);
 }
 
-function handleAction(el) {
+async function handleAction(el) {
   const action = el.dataset.action;
   const id = el.dataset.id;
 
-  if (action === 'nav-toggle') {
-    const links = document.querySelector('.nav-links');
-    const open = links.classList.toggle('open');
-    el.setAttribute('aria-expanded', String(open));
-    return;
-  }
-
   if (action === 'logout') {
-    try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
+    await sb.auth.signOut();
     state.loggedIn = false;
     navigate('avaleht');
     return;
@@ -757,21 +697,26 @@ function handleAction(el) {
   if (action === 'set-lang-en') { setLang('en'); return; }
 
   if (action === 'login-submit') {
-    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const email = document.getElementById('login-email').value.trim();
     const pw = document.getElementById('login-pw').value;
-    if (email === state.adminEmail.toLowerCase() && pw === state.adminPassword) {
-      try { localStorage.setItem(AUTH_KEY, '1'); } catch (e) {}
-      state.loggedIn = true;
-      uiState.loginError = false;
-      navigate('haldus');
-    } else {
-      uiState.loginError = true;
+    const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+    if (error) {
+      uiState.loginError = t('login_error');
       rerender();
+    } else {
+      state.loggedIn = true;
+      uiState.loginError = '';
+      navigate('haldus');
     }
     return;
   }
 
   if (action === 'forgot-submit') {
+    const email = document.getElementById('forgot-email').value.trim();
+    if (email) {
+      const redirectTo = window.location.origin + window.location.pathname + '#/lahtesta';
+      sb.auth.resetPasswordForEmail(email, { redirectTo }).catch((e) => console.error('resetPasswordForEmail error', e));
+    }
     navigate('unustasin_saadetud');
     return;
   }
@@ -784,27 +729,25 @@ function handleAction(el) {
       rerender();
       return;
     }
-    state.adminPassword = pw1;
-    persistCreds(state.adminEmail, pw1);
+    const { error } = await sb.auth.updateUser({ password: pw1 });
+    if (error) {
+      uiState.resetError = true;
+      rerender();
+      return;
+    }
     uiState.resetError = false;
+    await sb.auth.signOut();
+    state.loggedIn = false;
     navigate('login');
     return;
   }
 
   if (action === 'settings-submit') {
     const email = document.getElementById('settings-email').value.trim();
-    const currentPw = document.getElementById('settings-current-pw').value;
     const newPw = document.getElementById('settings-new-pw').value;
     if (!email) {
       uiState.settingsError = true;
       uiState.settingsErrorMsg = 'E-post ei saa olla tühi.';
-      uiState.settingsSaved = false;
-      rerender();
-      return;
-    }
-    if (newPw && currentPw !== state.adminPassword) {
-      uiState.settingsError = true;
-      uiState.settingsErrorMsg = 'Praegune parool on vale.';
       uiState.settingsSaved = false;
       rerender();
       return;
@@ -816,10 +759,23 @@ function handleAction(el) {
       rerender();
       return;
     }
-    const finalPw = newPw || state.adminPassword;
-    persistCreds(email, finalPw);
-    state.adminEmail = email;
-    state.adminPassword = finalPw;
+    const payload = {};
+    if (email !== state.adminEmail) payload.email = email;
+    if (newPw) payload.password = newPw;
+    if (Object.keys(payload).length === 0) {
+      uiState.settingsError = false;
+      uiState.settingsSaved = true;
+      rerender();
+      return;
+    }
+    const { error } = await sb.auth.updateUser(payload);
+    if (error) {
+      uiState.settingsError = true;
+      uiState.settingsErrorMsg = error.message;
+      uiState.settingsSaved = false;
+      rerender();
+      return;
+    }
     uiState.settingsError = false;
     uiState.settingsSaved = true;
     rerender();
@@ -833,20 +789,20 @@ function handleAction(el) {
   }
 
   if (action === 'add-painting') {
-    const blank = {
-      id: state.nextId,
+    const minPos = state.paintings.reduce((m, p) => Math.min(m, p.position ?? 0), 0);
+    const { data, error } = await sb.from('paintings').insert({
       title: 'Uus maal',
       tech: '',
       size: '',
       year: new Date().getFullYear(),
       price: null,
       sold: false,
-      desc: '',
-      img: null,
-    };
-    state.paintings.unshift(blank);
-    state.nextId += 1;
-    persistPaintings();
+      description: '',
+      image_url: null,
+      position: minPos - 1,
+    }).select().single();
+    if (error) { console.error('add-painting error', error); return; }
+    state.paintings.unshift(mapRow(data));
     rerender();
     return;
   }
@@ -856,26 +812,38 @@ function handleAction(el) {
     const idx = state.paintings.findIndex((p) => String(p.id) === String(id));
     const swapIdx = idx + dir;
     if (idx === -1 || swapIdx < 0 || swapIdx >= state.paintings.length) return;
-    [state.paintings[idx], state.paintings[swapIdx]] = [state.paintings[swapIdx], state.paintings[idx]];
-    persistPaintings();
+    const a = state.paintings[idx];
+    const b = state.paintings[swapIdx];
+    const posA = a.position, posB = b.position;
+    [state.paintings[idx], state.paintings[swapIdx]] = [b, a];
     rerender();
+    const [{ error: e1 }, { error: e2 }] = await Promise.all([
+      sb.from('paintings').update({ position: posB }).eq('id', a.id),
+      sb.from('paintings').update({ position: posA }).eq('id', b.id),
+    ]);
+    a.position = posB;
+    b.position = posA;
+    if (e1 || e2) console.error('move error', e1, e2);
     return;
   }
 
   if (action === 'remove-painting') {
+    if (!confirm('Kas oled kindel, et soovid selle maali kustutada?')) return;
+    const { error } = await sb.from('paintings').delete().eq('id', id);
+    if (error) { console.error('remove-painting error', error); return; }
     state.paintings = state.paintings.filter((p) => String(p.id) !== String(id));
-    persistPaintings();
     rerender();
     return;
   }
 
   if (action === 'mark-available' || action === 'mark-sold') {
     const p = state.paintings.find((x) => String(x.id) === String(id));
-    if (p) {
-      p.sold = action === 'mark-sold';
-      persistPaintings();
-      rerender();
-    }
+    if (!p) return;
+    const sold = action === 'mark-sold';
+    p.sold = sold;
+    rerender();
+    const { error } = await sb.from('paintings').update({ sold }).eq('id', id);
+    if (error) console.error('mark-sold error', error);
     return;
   }
 
@@ -907,8 +875,6 @@ document.addEventListener('click', (e) => {
   if (navEl) {
     e.preventDefault();
     navigate(navEl.dataset.nav, navEl.dataset.id);
-    const links = document.querySelector('.nav-links');
-    if (links) links.classList.remove('open');
     return;
   }
   const actionEl = e.target.closest('[data-action]');
@@ -936,16 +902,45 @@ document.addEventListener('change', (e) => {
     const id = t.dataset.id;
     const file = t.files && t.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      updatePaintingField(id, 'img', reader.result);
+    (async () => {
+      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+      const path = id + '-' + Date.now() + '-' + safeName;
+      const { error: uploadError } = await sb.storage.from('paintings').upload(path, file, {
+        upsert: true,
+        contentType: file.type,
+      });
+      if (uploadError) { console.error('image upload error', uploadError); return; }
+      const { data } = sb.storage.from('paintings').getPublicUrl(path);
+      const publicUrl = data.publicUrl;
+      const p = state.paintings.find((x) => String(x.id) === String(id));
+      if (p) p.img = publicUrl;
+      const { error: updateError } = await sb.from('paintings').update({ image_url: publicUrl }).eq('id', id);
+      if (updateError) console.error('image_url update error', updateError);
       rerender();
-    };
-    reader.readAsDataURL(file);
+    })();
   }
 });
 
 window.addEventListener('hashchange', onRouteChange);
 
-loadState();
-onRouteChange();
+sb.auth.onAuthStateChange((event, session) => {
+  state.loggedIn = !!session;
+  state.adminEmail = (session && session.user && session.user.email) || '';
+  if (event === 'PASSWORD_RECOVERY') {
+    navigate('lahtesta');
+  }
+});
+
+async function init() {
+  try { state.showSold = localStorage.getItem(SHOW_SOLD_KEY) !== '0'; } catch (e) {}
+  try { state.lang = localStorage.getItem(LANG_KEY) || 'et'; } catch (e) {}
+
+  const { data: { session } } = await sb.auth.getSession();
+  state.loggedIn = !!session;
+  state.adminEmail = (session && session.user && session.user.email) || '';
+
+  await loadPaintings();
+  onRouteChange();
+}
+
+init();
