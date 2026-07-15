@@ -301,6 +301,7 @@ button { font-family: var(--font-sans); }
 .admin-move span:hover { border-color: var(--text); color: var(--text); }
 .admin-move span.disabled { opacity: .35; pointer-events: none; }
 .admin-thumb { height: 140px; background: var(--bg-imgbox); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.admin-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .admin-thumb span { font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: #9a968c; }
 .admin-file-label {
   font-size: 11px; letter-spacing: .08em; color: var(--text-secondary); border: 1px solid var(--border-strong);
@@ -319,6 +320,10 @@ button { font-family: var(--font-sans); }
 }
 .field-mini input:focus, .field-mini textarea:focus { border-color: var(--text); }
 .field-mini textarea { resize: vertical; }
+.admin-save-row { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+.save-note { font-size: 12.5px; }
+.save-note.success { color: var(--success); }
+.save-note.error { color: var(--error); }
 .admin-status-row { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; flex-wrap: wrap; gap: 10px; }
 .admin-toggles { display: flex; gap: 8px; }
 .toggle-btn { cursor: pointer; font-size: 11.5px; letter-spacing: .06em; padding: 8px 16px; background: transparent; }

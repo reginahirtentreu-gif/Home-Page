@@ -623,6 +623,10 @@ function screenHaldus() {
             <div class="field-mini"><label>MÕÕDUD</label><input value="${esc(p.size)}" data-admin-field="size" data-id="${p.id}"></div>
           </div>
           <div class="field-mini"><label>KIRJELDUS</label><textarea rows="2" data-admin-field="desc" data-id="${p.id}">${esc(p.desc)}</textarea></div>
+          <div class="admin-save-row">
+            <button class="btn btn-outline" data-action="save-painting" data-id="${p.id}">Salvesta muudatused</button>
+            <span class="save-note" id="save-note-${p.id}"></span>
+          </div>
           <div class="admin-status-row">
             <div class="admin-toggles">
               <span class="toggle-btn avail ${!p.sold ? 'on' : ''}" data-action="mark-available" data-id="${p.id}">Saadaval</span>
@@ -643,7 +647,7 @@ function screenHaldus() {
         </div>
         <button class="btn btn-primary" data-action="add-painting">+ Lisa uus maal</button>
       </div>
-      <p class="admin-hint">Muudatused salvestatakse päris andmebaasi ja kehtivad kohe kõigile külastajatele. Iga maali juures saad vahetada pilti, muuta pealkirja, mõõtu, tehnikat, hinda ja kirjeldust, märkida kas töö on saadaval või müüdud, ning ↑/↓ nooltega muuta piltide järjekorda galeriis ja avalehel.</p>
+      <p class="admin-hint">Muudatused kehtivad kohe kõigile külastajatele. Teksti- ja hinnaväljade muutmisel vajuta "Salvesta muudatused" — pilt, saadavus/müüdud staatus ja järjekord salvestuvad kohe.</p>
       ${items || '<p style="color:var(--text-tertiary)">Ühtegi maali pole veel lisatud.</p>'}
     </div>
   `;
@@ -673,13 +677,39 @@ function render(page, param) {
 
 /* ===== Actions ===== */
 
-async function updatePaintingField(id, field, value) {
+function setPaintingFieldLocal(id, field, value) {
   const p = state.paintings.find((x) => String(x.id) === String(id));
   if (!p) return;
   p[field] = value;
-  const dbField = field === 'desc' ? 'description' : field;
-  const { error } = await sb.from('paintings').update({ [dbField]: value }).eq('id', id);
-  if (error) console.error('updatePaintingField error', error);
+}
+
+async function savePainting(id, btn) {
+  const p = state.paintings.find((x) => String(x.id) === String(id));
+  if (!p) return;
+  const note = document.getElementById('save-note-' + id);
+  const originalText = btn.textContent;
+  btn.textContent = 'Salvestan...';
+  btn.disabled = true;
+  const { error } = await sb.from('paintings').update({
+    title: p.title,
+    tech: p.tech,
+    size: p.size,
+    year: p.year,
+    price: p.price,
+    description: p.desc,
+  }).eq('id', id);
+  btn.disabled = false;
+  btn.textContent = originalText;
+  if (error) {
+    console.error('savePainting error', error);
+    if (note) { note.textContent = 'Viga salvestamisel'; note.className = 'save-note error'; }
+    return;
+  }
+  if (note) {
+    note.textContent = 'Salvestatud ✓';
+    note.className = 'save-note success';
+    setTimeout(() => { if (note) note.textContent = ''; }, 2500);
+  }
 }
 
 async function handleAction(el) {
@@ -788,6 +818,11 @@ async function handleAction(el) {
     return;
   }
 
+  if (action === 'save-painting') {
+    await savePainting(id, el);
+    return;
+  }
+
   if (action === 'add-painting') {
     const minPos = state.paintings.reduce((m, p) => Math.min(m, p.position ?? 0), 0);
     const { data, error } = await sb.from('paintings').insert({
@@ -892,7 +927,7 @@ document.addEventListener('input', (e) => {
     if (field === 'year' || field === 'price') {
       value = value === '' ? null : Number(value);
     }
-    updatePaintingField(id, field, value);
+    setPaintingFieldLocal(id, field, value);
   }
 });
 
