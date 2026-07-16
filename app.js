@@ -778,8 +778,9 @@ async function handleAction(el) {
   const id = el.dataset.id;
 
   if (action === 'logout') {
-    await sb.auth.signOut();
+    try { await sb.auth.signOut(); } catch (e) { console.error('signOut error', e); }
     state.loggedIn = false;
+    state.adminEmail = '';
     navigate('avaleht');
     return;
   }
@@ -827,8 +828,9 @@ async function handleAction(el) {
       return;
     }
     uiState.resetError = false;
-    await sb.auth.signOut();
+    try { await sb.auth.signOut(); } catch (e) { console.error('signOut error', e); }
     state.loggedIn = false;
+    state.adminEmail = '';
     navigate('login');
     return;
   }
@@ -980,7 +982,7 @@ document.addEventListener('click', (e) => {
   }
   const actionEl = e.target.closest('[data-action]');
   if (actionEl) {
-    handleAction(actionEl);
+    handleAction(actionEl).catch((err) => console.error('handleAction error', err));
   }
 });
 
