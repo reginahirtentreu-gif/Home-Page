@@ -778,10 +778,10 @@ async function handleAction(el) {
   const id = el.dataset.id;
 
   if (action === 'logout') {
-    try { await sb.auth.signOut(); } catch (e) { console.error('signOut error', e); }
     state.loggedIn = false;
     state.adminEmail = '';
     navigate('avaleht');
+    sb.auth.signOut().catch((e) => console.error('signOut error', e));
     return;
   }
 
@@ -828,10 +828,10 @@ async function handleAction(el) {
       return;
     }
     uiState.resetError = false;
-    try { await sb.auth.signOut(); } catch (e) { console.error('signOut error', e); }
     state.loggedIn = false;
     state.adminEmail = '';
     navigate('login');
+    sb.auth.signOut().catch((e) => console.error('signOut error', e));
     return;
   }
 
