@@ -179,6 +179,8 @@ button { font-family: var(--font-sans); }
   display: flex; align-items: center; justify-content: center;
 }
 .placeholder-block span { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #9a968c; text-align: center; padding: 0 12px; }
+.placeholder-block.portrait-photo { background: var(--bg-imgbox); overflow: hidden; }
+.placeholder-block.portrait-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
 
 .quote-text { margin: 0; font-family: var(--font-serif); font-size: 26px; line-height: 1.5; max-width: 560px; }
 .quote-more { margin: 22px 0 0; font-size: 13px; letter-spacing: .1em; color: var(--text-secondary); cursor: pointer; }

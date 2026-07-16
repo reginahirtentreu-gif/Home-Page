@@ -24,6 +24,7 @@ const state = {
   adminEmail: '',
   showSold: true,
   lang: 'et',
+  about: { bioEt: '', bioEn: '', portraitUrl: null },
 };
 
 const I18N = {
@@ -233,6 +234,19 @@ async function loadPaintings() {
   state.loading = false;
 }
 
+async function loadAbout() {
+  const { data, error } = await sb.from('about_content').select('*').eq('id', 1).single();
+  if (error) {
+    console.error('loadAbout error', error);
+    return;
+  }
+  state.about = {
+    bioEt: data.bio_et || '',
+    bioEn: data.bio_en || '',
+    portraitUrl: data.portrait_url || null,
+  };
+}
+
 function setLang(lang) {
   state.lang = lang;
   try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
@@ -353,7 +367,9 @@ function screenAvaleht() {
     <div class="featured-grid">${featuredHtml}</div>
     <div class="all-works-link"><span data-nav="galerii">${esc(t('home_all_works'))}</span></div>
     <div class="quote-block">
-      <div class="placeholder-block"><span>${esc(t('portrait_placeholder'))}</span></div>
+      ${state.about.portraitUrl
+        ? `<div class="placeholder-block portrait-photo"><img src="${esc(state.about.portraitUrl)}" alt="Regina Pruul"></div>`
+        : `<div class="placeholder-block"><span>${esc(t('portrait_placeholder'))}</span></div>`}
       <div>
         <p class="eyebrow">${esc(t('home_about_eyebrow'))}</p>
         <p class="quote-text">${esc(t('home_quote'))}</p>
@@ -439,15 +455,19 @@ function screenMaal(id) {
 }
 
 function screenKunstnikust() {
+  const bio = (state.lang === 'en' ? state.about.bioEn : state.about.bioEt) || '';
+  const paragraphs = bio.split(/\n\s*\n/).filter(Boolean).map((para) => `<p>${esc(para)}</p>`).join('');
+  const portraitHtml = state.about.portraitUrl
+    ? `<div class="placeholder-block portrait-photo"><img src="${esc(state.about.portraitUrl)}" alt="Regina Pruul"></div>`
+    : `<div class="placeholder-block"><span>${esc(t('about_portrait_placeholder'))}</span></div>`;
   return `
     <div class="page-section">
       <div class="about-grid">
-        <div class="placeholder-block"><span>${esc(t('about_portrait_placeholder'))}</span></div>
+        ${portraitHtml}
         <div class="about-body">
           <p class="eyebrow">${esc(t('about_eyebrow'))}</p>
           <h1>Regina Pruul</h1>
-          <p>${esc(t('about_bio1'))}</p>
-          <p>${esc(t('about_bio2'))}</p>
+          ${paragraphs}
           <div class="cv-block">
             <p class="label">${esc(t('about_cv_label'))}</p>
             <div class="cv-list">
@@ -591,6 +611,23 @@ function screenSeaded() {
           <input type="checkbox" id="settings-show-sold" ${state.showSold ? 'checked' : ''} data-action="toggle-show-sold">
           Näita müüdud töid galeriis
         </label>
+        <div class="settings-divider"></div>
+        <p class="label" style="font-size:11px;letter-spacing:.16em;color:var(--text-tertiary);margin:0 0 4px">KUNSTNIKUST LEHE SISU</p>
+        <div class="admin-thumb-col" style="max-width:160px">
+          <div class="admin-thumb">
+            ${state.about.portraitUrl ? `<img src="${esc(state.about.portraitUrl)}" alt="Portree">` : '<span>pilt puudub</span>'}
+          </div>
+          <label class="admin-file-label">
+            Vaheta portreefoto
+            <input type="file" accept="image/*" style="display:none" data-about-image-upload>
+          </label>
+        </div>
+        <div class="form-field"><label>MINUST (EESTI KEELES)</label><textarea id="about-bio-et" rows="6">${esc(state.about.bioEt)}</textarea></div>
+        <div class="form-field"><label>ABOUT (ENGLISH)</label><textarea id="about-bio-en" rows="6">${esc(state.about.bioEn)}</textarea></div>
+        <div class="admin-save-row">
+          <button class="btn btn-outline" data-action="save-about">Salvesta muudatused</button>
+          <span class="save-note" id="save-note-about"></span>
+        </div>
       </div>
     </div>
   `;
@@ -712,6 +749,30 @@ async function savePainting(id, btn) {
   }
 }
 
+async function saveAbout(btn) {
+  const bioEt = document.getElementById('about-bio-et').value;
+  const bioEn = document.getElementById('about-bio-en').value;
+  const note = document.getElementById('save-note-about');
+  const originalText = btn.textContent;
+  btn.textContent = 'Salvestan...';
+  btn.disabled = true;
+  const { error } = await sb.from('about_content').update({ bio_et: bioEt, bio_en: bioEn }).eq('id', 1);
+  btn.disabled = false;
+  btn.textContent = originalText;
+  if (error) {
+    console.error('saveAbout error', error);
+    if (note) { note.textContent = 'Viga salvestamisel'; note.className = 'save-note error'; }
+    return;
+  }
+  state.about.bioEt = bioEt;
+  state.about.bioEn = bioEn;
+  if (note) {
+    note.textContent = 'Salvestatud ✓';
+    note.className = 'save-note success';
+    setTimeout(() => { if (note) note.textContent = ''; }, 2500);
+  }
+}
+
 async function handleAction(el) {
   const action = el.dataset.action;
   const id = el.dataset.id;
@@ -820,6 +881,11 @@ async function handleAction(el) {
 
   if (action === 'save-painting') {
     await savePainting(id, el);
+    return;
+  }
+
+  if (action === 'save-about') {
+    await saveAbout(el);
     return;
   }
 
@@ -954,6 +1020,25 @@ document.addEventListener('change', (e) => {
       rerender();
     })();
   }
+  if (t.matches('[data-about-image-upload]')) {
+    const file = t.files && t.files[0];
+    if (!file) return;
+    (async () => {
+      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+      const path = 'about-' + Date.now() + '-' + safeName;
+      const { error: uploadError } = await sb.storage.from('paintings').upload(path, file, {
+        upsert: true,
+        contentType: file.type,
+      });
+      if (uploadError) { console.error('portrait upload error', uploadError); return; }
+      const { data } = sb.storage.from('paintings').getPublicUrl(path);
+      const publicUrl = data.publicUrl;
+      const { error: updateError } = await sb.from('about_content').update({ portrait_url: publicUrl }).eq('id', 1);
+      if (updateError) { console.error('portrait_url update error', updateError); return; }
+      state.about.portraitUrl = publicUrl;
+      rerender();
+    })();
+  }
 });
 
 window.addEventListener('hashchange', onRouteChange);
@@ -974,7 +1059,7 @@ async function init() {
   state.loggedIn = !!session;
   state.adminEmail = (session && session.user && session.user.email) || '';
 
-  await loadPaintings();
+  await Promise.all([loadPaintings(), loadAbout()]);
   onRouteChange();
 }
 
