@@ -295,7 +295,12 @@ function currentRoute() {
 }
 
 function navigate(page, id) {
-  location.hash = '#/' + page + (id != null ? '/' + id : '');
+  const newHash = '#/' + page + (id != null ? '/' + id : '');
+  if (location.hash === newHash) {
+    onRouteChange();
+  } else {
+    location.hash = newHash;
+  }
 }
 
 function onRouteChange() {
@@ -798,7 +803,7 @@ async function handleAction(el) {
     } else {
       state.loggedIn = true;
       uiState.loginError = '';
-      navigate('haldus');
+      navigate('avaleht');
     }
     return;
   }
