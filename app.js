@@ -254,7 +254,7 @@ function setLang(lang) {
 }
 
 function decorate(p) {
-  const priceStr = fmt(p.price);
+  const priceStr = (p.sold && p.price == null) ? '' : fmt(p.price);
   let subject, bodyLines, waText;
   if (state.lang === 'en') {
     subject = 'Inquiry: ' + p.title;
@@ -435,7 +435,7 @@ function screenMaal(id) {
           <h1>${esc(p.title)}</h1>
           <p class="meta">${esc(p.meta)}</p>
           ${p.desc ? `<p class="desc">${esc(p.desc)}</p>` : ''}
-          <p class="price">${esc(p.priceStr)}</p>
+          ${p.priceStr ? `<p class="price">${esc(p.priceStr)}</p>` : ''}
           ${p.avail ? `
             <div class="interest-block">
               <p class="interest-label">${esc(t('interested_label'))}</p>
