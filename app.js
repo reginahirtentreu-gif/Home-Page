@@ -19,6 +19,7 @@ const WHATSAPP_DISPLAY = '+372 5809 0777';
 
 const state = {
   paintings: [],
+  blogPosts: [],
   loading: true,
   loggedIn: false,
   adminEmail: '',
@@ -30,10 +31,18 @@ const state = {
 const I18N = {
   et: {
     footer_kontakt: 'Kontakt',
+    footer_blog: 'Blogi',
     footer_login: 'Logi sisse',
     footer_manage: 'Halda galeriid',
+    footer_manage_blog: 'Blogi haldus',
     footer_settings: 'Seaded',
     footer_logout: 'Logi välja',
+    blog_eyebrow: 'Blogi',
+    blog_title: 'Postitused',
+    blog_empty: 'Postitusi ei ole veel lisatud.',
+    blog_read_more: 'LOE EDASI →',
+    back_to_blog: '← TAGASI BLOGISSE',
+    post_not_found: 'Postitust ei leitud.',
     home_eyebrow: 'Originaalmaalid · õli ja akrüül',
     home_hero_title: 'Vaikus, valgus ja põhjamaine maastik lõuendil',
     home_btn_gallery: 'Vaata galeriid',
@@ -98,10 +107,18 @@ const I18N = {
   },
   en: {
     footer_kontakt: 'Contact',
+    footer_blog: 'Blog',
     footer_login: 'Log in',
     footer_manage: 'Manage gallery',
+    footer_manage_blog: 'Manage blog',
     footer_settings: 'Settings',
     footer_logout: 'Log out',
+    blog_eyebrow: 'Blog',
+    blog_title: 'Posts',
+    blog_empty: 'No posts yet.',
+    blog_read_more: 'READ MORE →',
+    back_to_blog: '← BACK TO BLOG',
+    post_not_found: 'Post not found.',
     home_eyebrow: 'Original paintings · oil and acrylic',
     home_hero_title: 'Silence, light, and the Nordic landscape on canvas',
     home_btn_gallery: 'View gallery',
@@ -247,6 +264,29 @@ async function loadAbout() {
   };
 }
 
+function mapBlogRow(r) {
+  return {
+    id: r.id,
+    titleEt: r.title_et || '',
+    titleEn: r.title_en || '',
+    bodyEt: r.body_et || '',
+    bodyEn: r.body_en || '',
+    img: r.image_url,
+    publishedAt: r.published_at,
+    position: r.position,
+  };
+}
+
+async function loadBlogPosts() {
+  const { data, error } = await sb.from('blog_posts').select('*').order('position', { ascending: true });
+  if (error) {
+    console.error('loadBlogPosts error', error);
+    state.blogPosts = [];
+    return;
+  }
+  state.blogPosts = (data || []).map(mapBlogRow);
+}
+
 function setLang(lang) {
   state.lang = lang;
   try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
@@ -305,7 +345,7 @@ function navigate(page, id) {
 
 function onRouteChange() {
   const { page, param } = currentRoute();
-  if ((page === 'haldus' || page === 'seaded') && !state.loggedIn) {
+  if ((page === 'haldus' || page === 'seaded' || page === 'blogihaldus') && !state.loggedIn) {
     location.hash = '#/login';
     return;
   }
@@ -323,11 +363,14 @@ function rerender() {
 function renderHeader() {
   const kontaktLink = document.getElementById('footer-kontakt-link');
   if (kontaktLink) kontaktLink.textContent = t('footer_kontakt');
+  const blogLink = document.getElementById('footer-blog-link');
+  if (blogLink) blogLink.textContent = t('footer_blog');
   const actions = document.getElementById('footer-actions');
   if (actions) {
     if (state.loggedIn) {
       actions.innerHTML = `
         <span data-nav="haldus">${esc(t('footer_manage'))}</span>
+        · <span data-nav="blogihaldus">${esc(t('footer_manage_blog'))}</span>
         · <span data-nav="seaded">${esc(t('footer_settings'))}</span>
         · <span data-action="logout">${esc(t('footer_logout'))}</span>
       `;
@@ -479,6 +522,60 @@ function screenKunstnikust() {
               <span>${esc(t('about_cv_education'))}</span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function decorateBlogPost(p) {
+  const title = (state.lang === 'en' ? p.titleEn : p.titleEt) || '';
+  const body = (state.lang === 'en' ? p.bodyEn : p.bodyEt) || '';
+  const locale = state.lang === 'en' ? 'en-GB' : 'et-EE';
+  const dateStr = p.publishedAt ? new Date(p.publishedAt + 'T00:00:00').toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+  return { ...p, title, body, dateStr };
+}
+
+function screenBlogi() {
+  const posts = state.blogPosts.map(decorateBlogPost);
+  const cards = posts.map((p) => `
+    <div class="painting-card">
+      <div data-nav="postitus" data-id="${p.id}">${imgBox({ img: p.img, title: p.title })}</div>
+      <div class="painting-row">
+        <span class="title" data-nav="postitus" data-id="${p.id}">${esc(p.title)}</span>
+      </div>
+      <div class="painting-meta-row">
+        <span class="painting-meta">${esc(p.dateStr)}</span>
+      </div>
+      <p class="quote-more" data-nav="postitus" data-id="${p.id}" style="margin:2px 0 0">${esc(t('blog_read_more'))}</p>
+    </div>
+  `).join('');
+
+  return `
+    <div class="page-section">
+      <p class="eyebrow">${esc(t('blog_eyebrow'))}</p>
+      <h1 class="page-title">${esc(t('blog_title'))}</h1>
+      <div class="gallery-grid">${cards || `<p style="color:var(--text-tertiary)">${esc(t('blog_empty'))}</p>`}</div>
+    </div>
+  `;
+}
+
+function screenBlogPost(id) {
+  const raw = state.blogPosts.find((p) => String(p.id) === String(id));
+  if (!raw) {
+    return `<div class="page-section"><span class="back-link" data-nav="blogi">${esc(t('back_to_blog'))}</span><p>${esc(t('post_not_found'))}</p></div>`;
+  }
+  const p = decorateBlogPost(raw);
+  const paragraphs = p.body.split(/\n\s*\n/).filter(Boolean).map((para) => `<p class="desc">${esc(para)}</p>`).join('');
+  return `
+    <div class="page-section">
+      <span class="back-link" data-nav="blogi">${esc(t('back_to_blog'))}</span>
+      <div class="painting-detail">
+        ${imgBox({ img: p.img, title: p.title })}
+        <div>
+          <p class="status-label">${esc(p.dateStr)}</p>
+          <h1>${esc(p.title)}</h1>
+          ${paragraphs}
         </div>
       </div>
     </div>
@@ -695,6 +792,59 @@ function screenHaldus() {
   `;
 }
 
+function screenBlogiHaldus() {
+  const items = state.blogPosts.map((p, idx) => `
+      <div class="admin-item">
+        <div class="admin-thumb-col">
+          <div class="admin-move">
+            <span class="${idx === 0 ? 'disabled' : ''}" data-action="move-blog-up" data-id="${p.id}">↑</span>
+            <span class="${idx === state.blogPosts.length - 1 ? 'disabled' : ''}" data-action="move-blog-down" data-id="${p.id}">↓</span>
+          </div>
+          <div class="admin-thumb">
+            ${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.titleEt)}">` : '<span>pilt puudub</span>'}
+          </div>
+          <label class="admin-file-label">
+            Vaheta pilt
+            <input type="file" accept="image/*" style="display:none" data-blog-image-upload data-id="${p.id}">
+          </label>
+        </div>
+        <div class="admin-fields">
+          <div class="admin-fields-row cols-2">
+            <div class="field-mini"><label>PEALKIRI (EESTI)</label><input value="${esc(p.titleEt)}" data-blog-field="title_et" data-id="${p.id}"></div>
+            <div class="field-mini"><label>TITLE (ENGLISH)</label><input value="${esc(p.titleEn)}" data-blog-field="title_en" data-id="${p.id}"></div>
+          </div>
+          <div class="field-mini"><label>SISU (EESTI)</label><textarea rows="4" data-blog-field="body_et" data-id="${p.id}">${esc(p.bodyEt)}</textarea></div>
+          <div class="field-mini"><label>BODY (ENGLISH)</label><textarea rows="4" data-blog-field="body_en" data-id="${p.id}">${esc(p.bodyEn)}</textarea></div>
+          <div class="admin-fields-row cols-2">
+            <div class="field-mini"><label>KUUPÄEV</label><input type="date" value="${esc(p.publishedAt || '')}" data-blog-field="published_at" data-id="${p.id}"></div>
+          </div>
+          <div class="admin-save-row">
+            <button class="btn btn-outline" data-action="save-blogpost" data-id="${p.id}">Salvesta muudatused</button>
+            <span class="save-note" id="save-note-blog-${p.id}"></span>
+          </div>
+          <div class="admin-status-row">
+            <span></span>
+            <span class="remove-link" data-action="remove-blogpost" data-id="${p.id}">Kustuta postitus</span>
+          </div>
+        </div>
+      </div>
+  `).join('');
+
+  return `
+    <div class="page-section">
+      <div class="admin-header">
+        <div>
+          <p class="eyebrow">Halduspaneel</p>
+          <h1 class="page-title" style="margin-bottom:0">Halda blogi</h1>
+        </div>
+        <button class="btn btn-primary" data-action="add-blogpost">+ Lisa uus postitus</button>
+      </div>
+      <p class="admin-hint">Muudatused kehtivad kohe kõigile külastajatele. Teksti- ja kuupäevaväljade muutmisel vajuta "Salvesta muudatused" — pilt ja järjekord salvestuvad kohe.</p>
+      ${items || '<p style="color:var(--text-tertiary)">Ühtegi postitust pole veel lisatud.</p>'}
+    </div>
+  `;
+}
+
 /* ===== Render dispatcher ===== */
 
 function render(page, param) {
@@ -704,6 +854,8 @@ function render(page, param) {
     maal: () => screenMaal(param),
     kunstnikust: screenKunstnikust,
     naitused: screenNaitused,
+    blogi: screenBlogi,
+    postitus: () => screenBlogPost(param),
     kontakt: screenKontakt,
     login: screenLogin,
     unustasin: screenUnustasin,
@@ -711,6 +863,7 @@ function render(page, param) {
     lahtesta: screenLahtesta,
     seaded: screenSeaded,
     haldus: screenHaldus,
+    blogihaldus: screenBlogiHaldus,
   };
   const fn = map[page] || screenAvaleht;
   document.getElementById('page').innerHTML = fn();
@@ -771,6 +924,40 @@ async function saveAbout(btn) {
   }
   state.about.bioEt = bioEt;
   state.about.bioEn = bioEn;
+  if (note) {
+    note.textContent = 'Salvestatud ✓';
+    note.className = 'save-note success';
+    setTimeout(() => { if (note) note.textContent = ''; }, 2500);
+  }
+}
+
+function setBlogFieldLocal(id, field, value) {
+  const p = state.blogPosts.find((x) => String(x.id) === String(id));
+  if (!p) return;
+  p[field] = value;
+}
+
+async function saveBlogPost(id, btn) {
+  const p = state.blogPosts.find((x) => String(x.id) === String(id));
+  if (!p) return;
+  const note = document.getElementById('save-note-blog-' + id);
+  const originalText = btn.textContent;
+  btn.textContent = 'Salvestan...';
+  btn.disabled = true;
+  const { error } = await sb.from('blog_posts').update({
+    title_et: p.titleEt,
+    title_en: p.titleEn,
+    body_et: p.bodyEt,
+    body_en: p.bodyEn,
+    published_at: p.publishedAt,
+  }).eq('id', id);
+  btn.disabled = false;
+  btn.textContent = originalText;
+  if (error) {
+    console.error('saveBlogPost error', error);
+    if (note) { note.textContent = 'Viga salvestamisel'; note.className = 'save-note error'; }
+    return;
+  }
   if (note) {
     note.textContent = 'Salvestatud ✓';
     note.className = 'save-note success';
@@ -955,6 +1142,57 @@ async function handleAction(el) {
     return;
   }
 
+  if (action === 'save-blogpost') {
+    await saveBlogPost(id, el);
+    return;
+  }
+
+  if (action === 'add-blogpost') {
+    const minPos = state.blogPosts.reduce((m, p) => Math.min(m, p.position ?? 0), 0);
+    const { data, error } = await sb.from('blog_posts').insert({
+      title_et: 'Uus postitus',
+      title_en: 'New post',
+      body_et: '',
+      body_en: '',
+      image_url: null,
+      published_at: new Date().toISOString().slice(0, 10),
+      position: minPos - 1,
+    }).select().single();
+    if (error) { console.error('add-blogpost error', error); return; }
+    state.blogPosts.unshift(mapBlogRow(data));
+    rerender();
+    return;
+  }
+
+  if (action === 'move-blog-up' || action === 'move-blog-down') {
+    const dir = action === 'move-blog-up' ? -1 : 1;
+    const idx = state.blogPosts.findIndex((p) => String(p.id) === String(id));
+    const swapIdx = idx + dir;
+    if (idx === -1 || swapIdx < 0 || swapIdx >= state.blogPosts.length) return;
+    const a = state.blogPosts[idx];
+    const b = state.blogPosts[swapIdx];
+    const posA = a.position, posB = b.position;
+    [state.blogPosts[idx], state.blogPosts[swapIdx]] = [b, a];
+    rerender();
+    const [{ error: e1 }, { error: e2 }] = await Promise.all([
+      sb.from('blog_posts').update({ position: posB }).eq('id', a.id),
+      sb.from('blog_posts').update({ position: posA }).eq('id', b.id),
+    ]);
+    a.position = posB;
+    b.position = posA;
+    if (e1 || e2) console.error('move blog error', e1, e2);
+    return;
+  }
+
+  if (action === 'remove-blogpost') {
+    if (!confirm('Kas oled kindel, et soovid selle postituse kustutada?')) return;
+    const { error } = await sb.from('blog_posts').delete().eq('id', id);
+    if (error) { console.error('remove-blogpost error', error); return; }
+    state.blogPosts = state.blogPosts.filter((p) => String(p.id) !== String(id));
+    rerender();
+    return;
+  }
+
   if (action === 'contact-submit') {
     const name = document.getElementById('contact-name').value.trim();
     const email = document.getElementById('contact-email').value.trim();
@@ -1002,6 +1240,12 @@ document.addEventListener('input', (e) => {
     }
     setPaintingFieldLocal(id, field, value);
   }
+  if (t.matches('[data-blog-field]')) {
+    const id = t.dataset.id;
+    const field = t.dataset.blogField;
+    const map = { title_et: 'titleEt', title_en: 'titleEn', body_et: 'bodyEt', body_en: 'bodyEn', published_at: 'publishedAt' };
+    setBlogFieldLocal(id, map[field] || field, t.value);
+  }
 });
 
 document.addEventListener('change', (e) => {
@@ -1046,6 +1290,27 @@ document.addEventListener('change', (e) => {
       rerender();
     })();
   }
+  if (t.matches('[data-blog-image-upload]')) {
+    const id = t.dataset.id;
+    const file = t.files && t.files[0];
+    if (!file) return;
+    (async () => {
+      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+      const path = 'blog-' + id + '-' + Date.now() + '-' + safeName;
+      const { error: uploadError } = await sb.storage.from('paintings').upload(path, file, {
+        upsert: true,
+        contentType: file.type,
+      });
+      if (uploadError) { console.error('blog image upload error', uploadError); return; }
+      const { data } = sb.storage.from('paintings').getPublicUrl(path);
+      const publicUrl = data.publicUrl;
+      const p = state.blogPosts.find((x) => String(x.id) === String(id));
+      if (p) p.img = publicUrl;
+      const { error: updateError } = await sb.from('blog_posts').update({ image_url: publicUrl }).eq('id', id);
+      if (updateError) console.error('blog image_url update error', updateError);
+      rerender();
+    })();
+  }
 });
 
 window.addEventListener('hashchange', onRouteChange);
@@ -1066,7 +1331,7 @@ async function init() {
   state.loggedIn = !!session;
   state.adminEmail = (session && session.user && session.user.email) || '';
 
-  await Promise.all([loadPaintings(), loadAbout()]);
+  await Promise.all([loadPaintings(), loadAbout(), loadBlogPosts()]);
   onRouteChange();
 }
 
