@@ -48,6 +48,9 @@ const I18N = {
     home_btn_gallery: 'Vaata galeriid',
     home_btn_about: 'Kunstnikust',
     home_all_works: 'KÕIK TÖÖD →',
+    home_btn_blog: 'Loe blogi',
+    home_blog_eyebrow: 'Blogist',
+    home_blog_all: 'KÕIK POSTITUSED →',
     home_about_eyebrow: 'Kunstnikust',
     home_quote: '„Maalin valgust, mis jääb hetkeks pidama — mere kohal, toa nurgas, mälestuses."',
     home_read_more: 'LOE EDASI →',
@@ -124,6 +127,9 @@ const I18N = {
     home_btn_gallery: 'View gallery',
     home_btn_about: 'About the artist',
     home_all_works: 'ALL WORKS →',
+    home_btn_blog: 'Read the blog',
+    home_blog_eyebrow: 'From the blog',
+    home_blog_all: 'ALL POSTS →',
     home_about_eyebrow: 'About the artist',
     home_quote: '"I paint light that lingers for a moment — over the sea, in the corner of a room, in memory."',
     home_read_more: 'READ MORE →',
@@ -403,6 +409,27 @@ function screenAvaleht() {
     </div>
   `).join('');
 
+  const latestPosts = state.blogPosts.slice(0, 2).map(decorateBlogPost);
+  const blogTeaserHtml = latestPosts.length ? `
+    <div class="page-section" style="padding-top:0">
+      <p class="eyebrow">${esc(t('home_blog_eyebrow'))}</p>
+      <div class="gallery-grid">
+        ${latestPosts.map((p) => `
+          <div class="painting-card">
+            <div data-nav="postitus" data-id="${p.id}">${imgBox({ img: p.img, title: p.title })}</div>
+            <div class="painting-row">
+              <span class="title" data-nav="postitus" data-id="${p.id}">${esc(p.title)}</span>
+            </div>
+            <div class="painting-meta-row">
+              <span class="painting-meta">${esc(p.dateStr)}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="all-works-link"><span data-nav="blogi">${esc(t('home_blog_all'))}</span></div>
+    </div>
+  ` : '';
+
   return `
     <div class="hero">
       <p class="eyebrow">${esc(t('home_eyebrow'))}</p>
@@ -410,6 +437,7 @@ function screenAvaleht() {
       <div class="hero-actions">
         <button class="btn btn-primary" data-nav="galerii">${esc(t('home_btn_gallery'))}</button>
         <button class="btn btn-outline" data-nav="kunstnikust">${esc(t('home_btn_about'))}</button>
+        <button class="btn btn-outline" data-nav="blogi">${esc(t('home_btn_blog'))}</button>
       </div>
     </div>
     <div class="featured-grid">${featuredHtml}</div>
@@ -424,6 +452,7 @@ function screenAvaleht() {
         <p class="quote-more" data-nav="kunstnikust">${esc(t('home_read_more'))}</p>
       </div>
     </div>
+    ${blogTeaserHtml}
   `;
 }
 
