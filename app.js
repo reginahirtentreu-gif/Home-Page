@@ -16,6 +16,8 @@ const LANG_KEY = 'rp_lang_v1';
 const CONTACT_EMAIL = 'regina.hirtentreu@gmail.com';
 const WHATSAPP_NUMBER = '37258090777';
 const WHATSAPP_DISPLAY = '+372 5809 0777';
+const INSTAGRAM_HANDLE = 'reginahirtentreu';
+const INSTAGRAM_URL = 'https://www.instagram.com/' + INSTAGRAM_HANDLE + '/';
 
 const state = {
   paintings: [],
@@ -78,6 +80,7 @@ const I18N = {
     about_bio2: 'Kujutan sageli loodust ja inimest, nihestades vaatenurka või liikudes abstraktsema kujutamisviisi suunas. Minu töid mõjutab ka huvi disaini vastu, mis toetab tundlikku kompositsiooni- ja värvikäsitlust.',
     about_cv_label: 'CV / VALIK',
     about_cv_education: 'Eesti Kunstiakadeemia — maali konserveerimise eriala',
+    about_instagram_link: 'Jälgi Instagrammis',
     contact_eyebrow: 'Kontakt',
     contact_title: 'Kirjuta mulle',
     contact_intro: 'Küsimused maalide, tellimustööde või näituste kohta on alati teretulnud.',
@@ -157,6 +160,7 @@ const I18N = {
     about_bio2: 'I often depict nature and the human figure, shifting perspective or moving toward a more abstract mode of representation. My work is also shaped by an interest in design, which supports a sensitive approach to composition and colour.',
     about_cv_label: 'CV / SELECTED',
     about_cv_education: 'Estonian Academy of Arts — painting conservation',
+    about_instagram_link: 'Follow on Instagram',
     contact_eyebrow: 'Contact',
     contact_title: 'Write to me',
     contact_intro: 'Questions about paintings, commissions, or exhibitions are always welcome.',
@@ -551,6 +555,9 @@ function screenKunstnikust() {
               <span>${esc(t('about_cv_education'))}</span>
             </div>
           </div>
+          <p class="quote-more">
+            <a href="${INSTAGRAM_URL}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${esc(t('about_instagram_link'))} · @${esc(INSTAGRAM_HANDLE)} →</a>
+          </p>
         </div>
       </div>
     </div>
@@ -650,7 +657,7 @@ function screenKontakt() {
             <span>${esc(CONTACT_EMAIL)}</span>
             <span>${esc(WHATSAPP_DISPLAY)}</span>
             <span>${esc(t('contact_studio'))}</span>
-            <span>Instagram: @reginapruul</span>
+            <span><a href="${INSTAGRAM_URL}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">Instagram: @${esc(INSTAGRAM_HANDLE)}</a></span>
           </div>
         </div>
         <div class="contact-form">
