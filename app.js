@@ -70,9 +70,6 @@ const I18N = {
     interested_label: 'Huvitatud sellest tööst?',
     email_btn: 'Kirjuta e-mailile',
     whatsapp_btn: 'Kirjuta WhatsAppis',
-    assurance_shipping: 'Tasuta transport Eestis · 5–7 tööpäeva',
-    assurance_cert: 'Autori sertifikaat kaasas',
-    assurance_return: '14-päevane tagastusõigus',
     price_on_request: 'Hind küsimisel',
     about_eyebrow: 'Kunstnikust',
     about_portrait_placeholder: 'kunstniku portree — foto',
@@ -150,9 +147,6 @@ const I18N = {
     interested_label: 'Interested in this piece?',
     email_btn: 'Send an email',
     whatsapp_btn: 'Message on WhatsApp',
-    assurance_shipping: 'Free shipping within Estonia · 5–7 business days',
-    assurance_cert: 'Certificate of authenticity included',
-    assurance_return: '14-day return policy',
     price_on_request: 'Price on request',
     about_eyebrow: 'About the artist',
     about_portrait_placeholder: 'artist portrait — photo',
@@ -524,11 +518,6 @@ function screenMaal(id) {
               </div>
             </div>
           ` : `<div class="sold-block"><span>${esc(t('sold_badge'))}</span></div>`}
-          <div class="assurances">
-            <span>${esc(t('assurance_shipping'))}</span>
-            <span>${esc(t('assurance_cert'))}</span>
-            <span>${esc(t('assurance_return'))}</span>
-          </div>
         </div>
       </div>
     </div>
